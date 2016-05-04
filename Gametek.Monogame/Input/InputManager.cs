@@ -63,8 +63,8 @@ namespace Gametek.Monogame.Input
         }
         public static void Draw(GameTime gameTime)
         {
-            Rectangle sourceRectangle      = new Rectangle(0,0,50,50);
-            Rectangle destinationRectangle = new Rectangle((int)MousePosition.X, (int)MousePosition.Y, 30, 30);
+            Rectangle sourceRectangle      = new Rectangle(52,0,26,26);
+            Rectangle destinationRectangle = new Rectangle((int)MousePosition.X, (int)MousePosition.Y, 26, 26);
 
             ScreenManager.spriteBatch.Draw(Cursor, destinationRectangle, sourceRectangle, Color.White);
 
@@ -93,6 +93,15 @@ namespace Gametek.Monogame.Input
         public static Vector3 SelectedVector3(Matrix projection, Matrix view)
         {
             return SelectedVector3(cMouse.Position, projection, view);
+        }
+
+        public static Vector3 WorldPosition(Vector2 MouseLocation, Viewport viewport, Matrix proj, Matrix view, Matrix world)
+        {
+            Vector3 nearPoint = viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 0.0f), proj, view, world);
+            Vector3 farPoint = viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 1.0f), proj, view, world);
+            Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
+
+            return (nearPoint - direction * (nearPoint.Y / direction.Y));
         }
 
         public static Vector3 SelectedVector3(Point mouseLocation, Matrix projection, Matrix view)

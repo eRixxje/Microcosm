@@ -8,7 +8,7 @@ namespace Microcosm
 {
     public class Microcosm : GameEngine
     {       
-        public Microcosm() : base(1680, 1050, false)
+        public Microcosm() : base(800, 600, false)
         {           
             Window.Title = "Microcosm Prototyping";
             Window.Position = new Point(100, 100);

@@ -92,7 +92,8 @@ namespace Gametek.Monogame.Managers
             }
             else
             {
-                DisplayMode maxRes = GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.Last();
+                DisplayMode maxRes = GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.OrderBy(d => d.Width).Last();
+                Console.WriteLine(maxRes);
                 graphics.PreferredBackBufferWidth = maxRes.Width;
                 graphics.PreferredBackBufferHeight = maxRes.Height;
             }

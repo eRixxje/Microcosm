@@ -44,7 +44,7 @@ namespace Microcosm.Screens
             //rasterizerState.CullMode = CullMode.None;
             //ScreenManager.GraphicsDevice.RasterizerState = rasterizerState;
 
-            map = new Tilemap(80, 80, 1f, 112334);
+            map = new Tilemap(6, 6, 1f, 112334);
 
             mapVertexBuffer = new VertexBuffer(ScreenManager.GraphicsDevice, 
                 VertexPositionColorNormal.vertexDeclaration, map.vertices.Length, BufferUsage.WriteOnly);
