@@ -13,8 +13,9 @@ namespace Microcosm.Screens
         private Matrix world = Matrix.Identity;
         private BasicEffect basicEffect;
         private Tilemap map;
+
         private VertexBuffer mapVertexBuffer;
-        //private IndexBuffer mapIndexBuffer;
+        private IndexBuffer mapIndexBuffer;
 
         private bool drawGrid;
 
@@ -31,23 +32,24 @@ namespace Microcosm.Screens
             basicEffect.VertexColorEnabled = true;
 
             // Lighting
-            basicEffect.LightingEnabled = false;
-            basicEffect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);
-            basicEffect.DirectionalLight0.Direction = new Vector3(0, 1, 0);
-            basicEffect.DirectionalLight0.SpecularColor = new Vector3(1, 1, 1);
-            basicEffect.AmbientLightColor = new Vector3(0.2f, 0.2f, 0.2f);
-            basicEffect.EmissiveColor = new Vector3(1, 0, 0);
+            //basicEffect.LightingEnabled = false;
+            //basicEffect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);
+            //basicEffect.DirectionalLight0.Direction = new Vector3(0, 1, 0);
+            //basicEffect.DirectionalLight0.SpecularColor = new Vector3(1, 1, 1);
+            //basicEffect.AmbientLightColor = new Vector3(0.2f, 0.2f, 0.2f);
+            //basicEffect.EmissiveColor = new Vector3(1, 0, 0);
 
             //RasterizerState rasterizerState = new RasterizerState();
             //rasterizerState.CullMode = CullMode.None;
-            //GraphicsDevice.RasterizerState = rasterizerState;
+            //ScreenManager.GraphicsDevice.RasterizerState = rasterizerState;
 
-            map = new Tilemap(100, 100, .5f, 112334);
+            map = new Tilemap(10, 10, 1f, 112334);
 
             mapVertexBuffer = new VertexBuffer(ScreenManager.GraphicsDevice, 
                 VertexPositionColorNormal.vertexDeclaration, map.vertices.Length, BufferUsage.WriteOnly);
-            //mapIndexBuffer = new IndexBuffer(ScreenManager.GraphicsDevice,
-            //    typeof(int), map.verticescount, BufferUsage.WriteOnly);
+            mapIndexBuffer = new IndexBuffer(ScreenManager.GraphicsDevice,
+                typeof(int), map.indices.Length, BufferUsage.WriteOnly);
+
         }
         public override void UnloadContent()
         {
@@ -74,19 +76,20 @@ namespace Microcosm.Screens
 
                 if (map.IsDirty)
                 {
+                    mapIndexBuffer.SetData(map.indices);
                     mapVertexBuffer.SetData(map.vertices);
-                    //mapIndexBuffer.SetData(verticescount);
+                    
 
 
-                    //ScreenManager.GraphicsDevice.Indices = mapIndexBuffer;
+                    ScreenManager.GraphicsDevice.Indices = mapIndexBuffer;
                     ScreenManager.GraphicsDevice.SetVertexBuffer(mapVertexBuffer);
                     map.IsDirty = false;
                 }
 
-                //ScreenManager.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, map.verticescount);
+                ScreenManager.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, map.vertices.Length/2);
 
-                ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, mapVertexBuffer.VertexCount/3);
-                ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, map.tileVertices, map.gridVertices/2);
+                //ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, mapVertexBuffer.VertexCount/3);
+                //ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, map.tileVertices, map.gridVertices/2);
 
                 //ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, cityVertexBuffer.VertexCount, linecount);
                 //ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, map.tileList.ToArray(), 0, map.tileList.Count/3, 

@@ -1,6 +1,5 @@
 ﻿using Gametek.Monogame;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Microcosm
 {
@@ -22,32 +21,41 @@ namespace Microcosm
             get { return Value > 0; }
         }
 
-        public VertexPositionColorNormal[] Vertices = new VertexPositionColorNormal[6];
+        public VertexPositionColorNormal[] Vertices = new VertexPositionColorNormal[4];
+        public int[] Indices = new int[6];
 
-        public Tile(Vector3 Position, float Size, int Value)
+        public Tile(Vector3 Position, float Size, double Value)
         {
             this.Position = Position;
-            this.Value    = Value;
+            this.Value    = (int)MathHelper.Clamp((float)Value * 10F, 0F, 10F);
 
             SetupVertices();
 
             for (int i = 0; i < Vertices.Length; i++)
             {
                 Vertices[i].Position += (Position*Size);
-                Vertices[i].Color    = Tilemap.GetColor(Value);
+                Vertices[i].Color    = Tilemap.GetColor(this.Value);
                 Vertices[i].Normal   = Vector3.Up;
             }
         }
 
         public void SetupVertices()
         {
+            /*
+             *  0 ---- 1
+             *  |      |
+             *  |      | 
+             *  |      |
+             *  2------3
+             */
+             
             Vertices[0].Position = new Vector3(0, 0, 0);
             Vertices[1].Position = new Vector3(1, 0, 0);
             Vertices[2].Position = new Vector3(0, 0, 1);
+            Vertices[3].Position = new Vector3(1, 0, 1);
 
-            Vertices[3].Position = new Vector3(0, 0, 1);
-            Vertices[4].Position = new Vector3(1, 0, 0);
-            Vertices[5].Position = new Vector3(1, 0, 1);
+            Indices[0] = 2; Indices[1] = 0; Indices[2] = 1;
+            Indices[3] = 1; Indices[4] = 3; Indices[5] = 2;
         }
     }
 }
