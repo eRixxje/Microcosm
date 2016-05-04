@@ -90,6 +90,11 @@ namespace Gametek.Monogame.Input
             return res;
         }
 
+        public static Vector3 SelectedVector3(Matrix projection, Matrix view)
+        {
+            return SelectedVector3(cMouse.Position, projection, view);
+        }
+
         public static Vector3 SelectedVector3(Point mouseLocation, Matrix projection, Matrix view)
         {
             Vector3 nearPoint = ScreenManager.Viewport.Unproject(new Vector3(mouseLocation.X, mouseLocation.Y, 0.0f), projection, view, Matrix.Identity);

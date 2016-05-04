@@ -1,5 +1,4 @@
 ﻿using Gametek.Monogame.Managers;
-using Gametek.Monogame.UI.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

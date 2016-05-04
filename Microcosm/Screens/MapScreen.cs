@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Gametek.Monogame;
 using Gametek.Monogame.Managers;
 using Gametek.Monogame.Input;
+using System;
 
 namespace Microcosm.Screens
 {
@@ -16,6 +17,8 @@ namespace Microcosm.Screens
 
         private VertexBuffer mapVertexBuffer;
         private IndexBuffer  mapIndexBuffer;
+
+        private string mouseposition;
 
         public MapScreen(bool IsActive) : base(IsActive)
         {
@@ -58,6 +61,9 @@ namespace Microcosm.Screens
 
             if (InputManager.IsKeyPress(Keys.F1))
                 map.drawGrid = !map.drawGrid;
+
+            Vector3 pos = InputManager.SelectedVector3(camera.projection, camera.view);
+            mouseposition = string.Format("{0} {1}", Math.Floor(pos.X), Math.Floor(pos.Z));
         }
         public override void Draw(GameTime gameTime)
         {
@@ -91,6 +97,8 @@ namespace Microcosm.Screens
                 new Vector2(10, 10), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "CAM: " + camera.cameraPositionString, 
                 new Vector2(10, 40), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
+            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "Mouse: " + mouseposition,
+                new Vector2(10, 70), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
         }
     }
 }
