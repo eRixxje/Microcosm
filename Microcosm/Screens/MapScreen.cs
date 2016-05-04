@@ -15,9 +15,7 @@ namespace Microcosm.Screens
         private Tilemap map;
 
         private VertexBuffer mapVertexBuffer;
-        private IndexBuffer mapIndexBuffer;
-
-        private bool drawGrid;
+        private IndexBuffer  mapIndexBuffer;
 
         public MapScreen(bool IsActive) : base(IsActive)
         {
@@ -32,24 +30,23 @@ namespace Microcosm.Screens
             basicEffect.VertexColorEnabled = true;
 
             // Lighting
-            //basicEffect.LightingEnabled = false;
-            //basicEffect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);
-            //basicEffect.DirectionalLight0.Direction = new Vector3(0, 1, 0);
-            //basicEffect.DirectionalLight0.SpecularColor = new Vector3(1, 1, 1);
-            //basicEffect.AmbientLightColor = new Vector3(0.2f, 0.2f, 0.2f);
-            //basicEffect.EmissiveColor = new Vector3(1, 0, 0);
+            basicEffect.LightingEnabled = true;
+            basicEffect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);
+            basicEffect.DirectionalLight0.Direction = new Vector3(0, 0, 0);
+            basicEffect.DirectionalLight0.SpecularColor = new Vector3(1, 1, 1);
+            basicEffect.AmbientLightColor = new Vector3(1f, 1f, 1f);
+            basicEffect.EmissiveColor = new Vector3(1, 0, 0);
 
             //RasterizerState rasterizerState = new RasterizerState();
             //rasterizerState.CullMode = CullMode.None;
             //ScreenManager.GraphicsDevice.RasterizerState = rasterizerState;
 
-            map = new Tilemap(10, 10, 1f, 112334);
+            map = new Tilemap(80, 80, 1f, 112334);
 
             mapVertexBuffer = new VertexBuffer(ScreenManager.GraphicsDevice, 
                 VertexPositionColorNormal.vertexDeclaration, map.vertices.Length, BufferUsage.WriteOnly);
             mapIndexBuffer = new IndexBuffer(ScreenManager.GraphicsDevice,
                 typeof(int), map.indices.Length, BufferUsage.WriteOnly);
-
         }
         public override void UnloadContent()
         {
@@ -60,7 +57,7 @@ namespace Microcosm.Screens
             camera.Update(gameTime);
 
             if (InputManager.IsKeyPress(Keys.F1))
-                drawGrid = !drawGrid;
+                map.drawGrid = !map.drawGrid;
         }
         public override void Draw(GameTime gameTime)
         {
@@ -79,28 +76,21 @@ namespace Microcosm.Screens
                     mapIndexBuffer.SetData(map.indices);
                     mapVertexBuffer.SetData(map.vertices);
                     
-
-
                     ScreenManager.GraphicsDevice.Indices = mapIndexBuffer;
                     ScreenManager.GraphicsDevice.SetVertexBuffer(mapVertexBuffer);
                     map.IsDirty = false;
                 }
 
                 ScreenManager.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, map.vertices.Length/2);
-
-                //ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, mapVertexBuffer.VertexCount/3);
-                //ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, map.tileVertices, map.gridVertices/2);
-
-                //ScreenManager.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, cityVertexBuffer.VertexCount, linecount);
-                //ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, map.tileList.ToArray(), 0, map.tileList.Count/3, 
-                //    VertexPositionColorNormal.vertexDeclaration);
                 
-                //if (drawGrid)
-                //    ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, map.gridLines.ToArray(), 0, map.gridLines.Count / 2);
+                if (map.drawGrid)
+                    ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, map.grid, 0, map.grid.Length/2);
             }
 
-            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "FPS: " + (1000 / gameTime.ElapsedGameTime.Milliseconds), new Vector2(10, 10), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
-            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "CAM: " + camera.cameraPositionString, new Vector2(10, 30), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
+            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "FPS: " + (1000 / gameTime.ElapsedGameTime.Milliseconds), 
+                new Vector2(10, 10), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
+            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "CAM: " + camera.cameraPositionString, 
+                new Vector2(10, 40), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
         }
     }
 }
