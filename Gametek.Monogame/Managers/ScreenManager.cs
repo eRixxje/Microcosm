@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gametek.Monogame.Managers
 {
     public sealed class ScreenManager
     {
+        private static int startupWidth, startupHeight;
         private static List<GameScreen> screens = new List<GameScreen>();
 
         public static Game game { get; private set; }
@@ -30,11 +33,14 @@ namespace Gametek.Monogame.Managers
         {
             game = Game;
 
+            startupWidth  = Width;
+            startupHeight = Height;
+
             graphics = new GraphicsDeviceManager(Game)
             {
                 IsFullScreen = false,
-                PreferredBackBufferWidth = Width,
-                PreferredBackBufferHeight = Height
+                PreferredBackBufferWidth = startupWidth,
+                PreferredBackBufferHeight = startupHeight
             };
         }
 
@@ -75,6 +81,24 @@ namespace Gametek.Monogame.Managers
                 if(screens[i].IsActive)
                     screens[i].Draw(gameTime);
             }
+        }
+
+        public static void ToggleFullScreen()
+        {
+            if (graphics.IsFullScreen)
+            {
+                graphics.PreferredBackBufferWidth  = startupWidth;
+                graphics.PreferredBackBufferHeight = startupHeight;
+            }
+            else
+            {
+                DisplayMode maxRes = GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.Last();
+                graphics.PreferredBackBufferWidth = maxRes.Width;
+                graphics.PreferredBackBufferHeight = maxRes.Height;
+            }
+
+            graphics.ToggleFullScreen();
+            graphics.ApplyChanges();
         }
     }
 }

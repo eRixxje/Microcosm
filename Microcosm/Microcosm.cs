@@ -32,14 +32,8 @@ namespace Microcosm
             
             if (InputManager.IsKeyPress(Keys.F11))
             {
-                ScreenManager.graphics.ToggleFullScreen();
-                ScreenManager.graphics.ApplyChanges();
+                ScreenManager.ToggleFullScreen();
             }
         }
-
-        //protected override void Draw(GameTime gameTime)
-        //{
-        //    base.Draw(gameTime);
-        //}
     }
 }
