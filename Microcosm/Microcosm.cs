@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Gametek.Monogame.Managers;
-using Gametek.Monogame.Input;
 using Gametek.Monogame;
 
 namespace Microcosm
@@ -19,7 +18,7 @@ namespace Microcosm
             base.LoadContent();
 
             // Add Screens
-            ScreenManager.Add(new Screens.MainScreen(true));
+            //ScreenManager.Add(new Screens.MainScreen(true));
             ScreenManager.Add(new Screens.MapScreen(true));
         }
 

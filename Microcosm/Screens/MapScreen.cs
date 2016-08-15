@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Gametek.Monogame;
 using Gametek.Monogame.Managers;
-using Gametek.Monogame.Input;
 using System;
 
 namespace Microcosm.Screens
@@ -22,7 +21,7 @@ namespace Microcosm.Screens
 
         public MapScreen(bool IsActive) : base(IsActive)
         {
-            camera = new Camera(new Vector3(10, 12, 10), new Vector3(0, 0, 0));
+            camera = new Camera(new Vector3(10, 12, 10), new Vector3(3, 0, 3));
         }
 
         public override void LoadContent()
@@ -33,7 +32,7 @@ namespace Microcosm.Screens
             basicEffect.VertexColorEnabled = true;
 
             // Lighting
-            basicEffect.LightingEnabled = true;
+            //basicEffect.LightingEnabled = true;
             basicEffect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);
             basicEffect.DirectionalLight0.Direction = new Vector3(0, 0, 0);
             basicEffect.DirectionalLight0.SpecularColor = new Vector3(1, 1, 1);
@@ -97,8 +96,10 @@ namespace Microcosm.Screens
                 new Vector2(10, 10), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "CAM: " + camera.cameraPositionString, 
                 new Vector2(10, 40), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
-            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "Mouse: " + mouseposition,
+            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "Target: " + camera.cameraTargetString,
                 new Vector2(10, 70), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
+            ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "Mouse: " + mouseposition,
+                new Vector2(10, 100), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
         }
     }
 }

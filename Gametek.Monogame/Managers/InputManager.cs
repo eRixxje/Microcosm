@@ -1,10 +1,9 @@
-﻿using Gametek.Monogame.Managers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Gametek.Monogame.Input
+namespace Gametek.Monogame.Managers
 {
     public enum ScrollDirection
     {
@@ -63,12 +62,10 @@ namespace Gametek.Monogame.Input
         }
         public static void Draw(GameTime gameTime)
         {
-            Rectangle sourceRectangle      = new Rectangle(52,0,26,26);
-            Rectangle destinationRectangle = new Rectangle((int)MousePosition.X, (int)MousePosition.Y, 26, 26);
+            Rectangle sourceRectangle      = new Rectangle(0,0,26,26);
+            Rectangle destinationRectangle = new Rectangle((int)MousePosition.X, (int)MousePosition.Y, 16, 16);
 
             ScreenManager.spriteBatch.Draw(Cursor, destinationRectangle, sourceRectangle, Color.White);
-
-            //spriteBatch.Draw(Cursor, MousePosition, null, Color.White, 0f, Vector2.Zero, .1f, SpriteEffects.None, 0f);
         }
 
         public static bool IsKeyDown(Keys key)
@@ -78,6 +75,23 @@ namespace Gametek.Monogame.Input
         public static bool IsKeyPress(Keys key)
         {
             return cKey.IsKeyDown(key) && !pKey.IsKeyDown(key);
+        }
+        public static bool IsRightMouseDown
+        {
+            get { return cMouse.RightButton == ButtonState.Pressed; }
+        }
+
+        public static Vector3 GetMouseDragDelta()
+        {
+            Vector3 res = new Vector3();
+
+            if (cMouse.RightButton == ButtonState.Pressed)
+            {
+                res.X = cMouse.Position.X - pMouse.Position.X;
+                res.Z = cMouse.Position.Y - pMouse.Position.Y;
+            }
+
+            return res;
         }
 
         public static Vector3 GetMouseDragDelta(Matrix projection, Matrix view)

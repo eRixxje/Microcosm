@@ -1,5 +1,4 @@
-﻿using Gametek.Monogame.Input;
-using Gametek.Monogame.Managers;
+﻿using Gametek.Monogame.Managers;
 using Microsoft.Xna.Framework;
 
 namespace Gametek.Monogame
@@ -14,7 +13,8 @@ namespace Gametek.Monogame
 
         protected override void LoadContent()
         {
-            // Init Managers' Content
+            //System.Diagnostics.Debug.WriteLine("GameEngine::LoadContent()");
+
             ScreenManager.LoadContent();
             FontManager.LoadContent(Content);
             InputManager.LoadContent(Content);
@@ -24,6 +24,8 @@ namespace Gametek.Monogame
 
         protected override void Update(GameTime gameTime)
         {
+            //System.Diagnostics.Debug.WriteLine("GameEngine::Update()");
+
             InputManager.Update();
             ScreenManager.Update(gameTime);
 
@@ -32,6 +34,8 @@ namespace Gametek.Monogame
 
         protected override void Draw(GameTime gameTime)
         {
+            //System.Diagnostics.Debug.WriteLine("GameEngine::Draw()");
+
             ScreenManager.GraphicsDevice.Clear(Color.Black);
 
             ScreenManager.spriteBatch.Begin();
