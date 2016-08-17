@@ -6,8 +6,10 @@ using Gametek.Monogame;
 namespace Microcosm
 {
     public class Microcosm : GameEngine
-    {       
-        public Microcosm() : base(800, 600, false)
+    {
+        //private Model model;
+
+        public Microcosm() : base(1440, 960, false)
         {           
             Window.Title = "Microcosm Prototyping";
             Window.Position = new Point(100, 100);
@@ -20,6 +22,7 @@ namespace Microcosm
             // Add Screens
             //ScreenManager.Add(new Screens.MainScreen(true));
             ScreenManager.Add(new Screens.MapScreen(true));
+            //ScreenManager.Add(new Screens.CubeScreen(true));
         }
 
         protected override void Update(GameTime gameTime)

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Gametek.Monogame;
 using Gametek.Monogame.Managers;
 using System;
+using Gametek.Monogame.UI.Helper;
 
 namespace Microcosm.Screens
 {
@@ -19,9 +20,11 @@ namespace Microcosm.Screens
 
         private string mouseposition;
 
+        private cube Cube;
+
         public MapScreen(bool IsActive) : base(IsActive)
         {
-            camera = new Camera(new Vector3(10, 12, 10), new Vector3(3, 0, 3));
+            camera = new Camera(new Vector3(20, 22, 20), new Vector3(3, 0, 3));
         }
 
         public override void LoadContent()
@@ -32,7 +35,7 @@ namespace Microcosm.Screens
             basicEffect.VertexColorEnabled = true;
 
             // Lighting
-            //basicEffect.LightingEnabled = true;
+            basicEffect.LightingEnabled = true;
             basicEffect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);
             basicEffect.DirectionalLight0.Direction = new Vector3(0, 0, 0);
             basicEffect.DirectionalLight0.SpecularColor = new Vector3(1, 1, 1);
@@ -43,12 +46,14 @@ namespace Microcosm.Screens
             //rasterizerState.CullMode = CullMode.None;
             //ScreenManager.GraphicsDevice.RasterizerState = rasterizerState;
 
-            map = new Tilemap(6, 6, 1f, 112334);
+            map = new Tilemap(900, 900, .25f, 112334);
 
             mapVertexBuffer = new VertexBuffer(ScreenManager.GraphicsDevice, 
                 VertexPositionColorNormal.vertexDeclaration, map.vertices.Length, BufferUsage.WriteOnly);
             mapIndexBuffer = new IndexBuffer(ScreenManager.GraphicsDevice,
                 typeof(int), map.indices.Length, BufferUsage.WriteOnly);
+
+            Cube = new cube();
         }
         public override void UnloadContent()
         {
@@ -61,7 +66,7 @@ namespace Microcosm.Screens
             if (InputManager.IsKeyPress(Keys.F1))
                 map.drawGrid = !map.drawGrid;
 
-            Vector3 pos = InputManager.SelectedVector3(camera.projection, camera.view);
+            Vector3 pos = GeometryHelper.WorldPosition(InputManager.MousePosition, camera.projection, camera.view);
             mouseposition = string.Format("{0} {1}", Math.Floor(pos.X), Math.Floor(pos.Z));
         }
         public override void Draw(GameTime gameTime)
@@ -69,8 +74,9 @@ namespace Microcosm.Screens
             basicEffect.World = world;
             basicEffect.View = camera.view;
             basicEffect.Projection = camera.projection;
-                        
+
             camera.Draw(gameTime);
+            
 
             foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
@@ -80,17 +86,18 @@ namespace Microcosm.Screens
                 {
                     mapIndexBuffer.SetData(map.indices);
                     mapVertexBuffer.SetData(map.vertices);
-                    
-                    ScreenManager.GraphicsDevice.Indices = mapIndexBuffer;
-                    ScreenManager.GraphicsDevice.SetVertexBuffer(mapVertexBuffer);
                     map.IsDirty = false;
                 }
 
-                ScreenManager.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, map.vertices.Length/2);
-                
+                ScreenManager.GraphicsDevice.Indices = mapIndexBuffer;
+                ScreenManager.GraphicsDevice.SetVertexBuffer(mapVertexBuffer);
+                ScreenManager.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, map.vertices.Length / 2);
+
                 if (map.drawGrid)
-                    ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, map.grid, 0, map.grid.Length/2);
+                    ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, map.grid, 0, map.grid.Length / 2);
             }
+
+            Cube.Draw(camera, new Vector3(30,0,30));
 
             ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, "FPS: " + (1000 / gameTime.ElapsedGameTime.Milliseconds), 
                 new Vector2(10, 10), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);

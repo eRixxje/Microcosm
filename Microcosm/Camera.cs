@@ -7,6 +7,20 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Microcosm
 {
+    public enum Movement
+    {
+        Left,
+        Right,
+        Forward,
+        Back,
+        Up,
+        Down,
+        ArcLeft,
+        ArcRight,
+        ZoomIn,
+        ZoomOut
+    }
+
     public sealed class Camera
     {
         private Axes axes = new Axes();
@@ -14,35 +28,38 @@ namespace Microcosm
         public Matrix view { get; private set; }
         public Matrix projection { get; private set; }
 
+        private Matrix camWorld
+        {
+            get { return Matrix.Invert(view); }
+        }
+
         public string cameraPositionString
         {
             get
             {
-                return string.Format("X:{0}, Y:{1}, Z:{2}", Position.X, Position.Y, Position.Z );
+                return string.Format("{0:0.00}, {1:0.00}, {2:0.00}", Position.X, Position.Y, Position.Z );
             }
         }
         public string cameraTargetString
         {
             get
             {
-                return string.Format("X:{0}, Y:{1}, Z:{2}", Target.X, Target.Y, Target.Z);
+                return string.Format("{0:0.00}, {1:0.00}, {2:0.00}", Target.X, Target.Y, Target.Z);
             }
         }
 
         // Camera
         public Vector3 Position { get; private set; }
         public Vector3 Target { get; private set; }
-         
+
         // Fixed 
         private const float panSpeed  = .08f;
-        private const float zoomSpeed = .4f;
+        private const float zoomSpeed = .6f;
         private const float rotationSpeed = .01f;
 
         private const float minZoom = 5f;
-        private const float maxZoom = 12f;
+        private const float maxZoom = 30f;
         
-
-
         private bool drawAxes;
 
         public Camera(Vector3 Position, Vector3 Target)
@@ -67,66 +84,42 @@ namespace Microcosm
 
         public void Update(GameTime gameTime)
         {
-            Matrix camWorld = Matrix.Invert(view);
-            Vector3 fwd = camWorld.Forward;
-            fwd.Y = 0;
-
             if (InputManager.IsKeyPress(Keys.F2))
                 drawAxes = !drawAxes;
 
             // Keyboard input
-            if (InputManager.IsKeyDown(Keys.W))
-            {
-                Position += fwd * panSpeed;
-                Target += fwd * panSpeed;
-            }
-            if (InputManager.IsKeyDown(Keys.S))
-            {
-                Position -= fwd * panSpeed;
-                Target -= fwd * panSpeed;
-            }
+            if (InputManager.IsKeyDown(Keys.W) && InputManager.IsKeyDown(Keys.LeftShift))
+                Move(Movement.Up);
+            if (InputManager.IsKeyDown(Keys.W) && !InputManager.IsKeyDown(Keys.LeftShift))
+                Move(Movement.Forward);
+            if (InputManager.IsKeyDown(Keys.S) && InputManager.IsKeyDown(Keys.LeftShift))
+                Move(Movement.Down);
+            if (InputManager.IsKeyDown(Keys.S) && !InputManager.IsKeyDown(Keys.LeftShift))
+                Move(Movement.Back);
             if (InputManager.IsKeyDown(Keys.A))
-            {
-                Position += camWorld.Left * panSpeed;
-                Target += camWorld.Left * panSpeed;
-            }
+                Move(Movement.Left);
             if (InputManager.IsKeyDown(Keys.D))
-            {
-                Position += camWorld.Right * panSpeed;
-                Target += camWorld.Right * panSpeed;
-            }
-
-            // Rotate
-            if (InputManager.IsKeyDown(Keys.Q))
-            {
-                Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), rotationSpeed)) + Target;
-            }
-            if (InputManager.IsKeyDown(Keys.E))
-            {
-                Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), -rotationSpeed)) + Target;
-            }
-
-            // Zoom
-            if(InputManager.MouseZoom == ScrollDirection.ZoomIn)
-            {
-                Position += camWorld.Backward * zoomSpeed;
-            }
-            if (InputManager.MouseZoom == ScrollDirection.ZoomOut)
-            {
-                Position += camWorld.Forward * zoomSpeed;
-            }
+                Move(Movement.Right);
+            if (InputManager.IsKeyDown(Keys.Z))
+                Move(Movement.ArcLeft);
+            if (InputManager.IsKeyDown(Keys.X))
+                Move(Movement.ArcRight);
+            if (InputManager.MouseZoom == ScrollDirection.ZoomIn && Position.Y < maxZoom)
+                Move(Movement.ZoomIn);
+            if (InputManager.MouseZoom == ScrollDirection.ZoomOut && Position.Y > minZoom)
+                Move(Movement.ZoomOut);
 
             // Drag
-            if (InputManager.IsRightMouseDown)
+            if (InputManager.IsMouseDown(MouseButton.RightButton))
             {
                 Position -= InputManager.GetMouseDragDelta(projection, view);
                 Target -= InputManager.GetMouseDragDelta(projection, view);
             }
 
-            // Create View
+            // Update View
             view = Matrix.CreateLookAt(Position, Target, Vector3.Up);
         }
-
+        
         public void Draw(GameTime gameTime)
         {
             if(drawAxes)
@@ -139,6 +132,50 @@ namespace Microcosm
 
             // Draw our pixel texture there
             ScreenManager.spriteBatch.Draw(pixel, new Vector2(screenLocation.X, screenLocation.Y), Color.Red);
+        }
+
+        public void Move(Movement CameraMovement)
+        {
+            Vector3 fwd = camWorld.Forward;
+            fwd.Y = 0;
+
+            switch (CameraMovement)
+            {
+                case Movement.Up:
+                    Position += camWorld.Down;
+                    break;
+                case Movement.Down:
+                    Position -= camWorld.Down;
+                    break;
+                case Movement.Left:
+                    Position += camWorld.Left * panSpeed;
+                    Target += camWorld.Left * panSpeed;
+                    break;
+                case Movement.Right:
+                    Position -= camWorld.Left * panSpeed;
+                    Target -= camWorld.Left * panSpeed;
+                    break;
+                case Movement.Forward:
+                    Position += fwd * panSpeed;
+                    Target += fwd * panSpeed;
+                    break;
+                case Movement.Back:
+                    Position -= fwd * panSpeed;
+                    Target -= fwd * panSpeed;
+                    break;
+                case Movement.ArcLeft:
+                    Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), rotationSpeed)) + Target;
+                    break;
+                case Movement.ArcRight:
+                    Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), -rotationSpeed)) + Target;
+                    break;
+                case Movement.ZoomIn:
+                    Position += camWorld.Backward * zoomSpeed;
+                    break;
+                case Movement.ZoomOut:
+                    Position += camWorld.Forward * zoomSpeed;
+                    break;
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Gametek.Monogame
             ScreenManager.LoadContent();
             FontManager.LoadContent(Content);
             InputManager.LoadContent(Content);
+            ModelManager.LoadContent(Content);
 
             base.LoadContent();
         }

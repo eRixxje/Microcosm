@@ -53,9 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="GameScreen.cs" />
     <Compile Include="Managers\InputManager.cs" />
+    <Compile Include="Managers\ModelManager.cs" />
     <Compile Include="Math\NoiseGen.cs" />
     <Compile Include="MouseEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

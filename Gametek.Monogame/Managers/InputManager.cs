@@ -1,10 +1,20 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Gametek.Monogame.UI.Helper;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Gametek.Monogame.Managers
 {
+    public enum MouseButton
+    {
+        LeftButton,
+        MiddleButton,
+        RightButton,
+        ExtraButton1,
+        ExtraButton2
+    }
+
     public enum ScrollDirection
     {
         None,
@@ -17,12 +27,9 @@ namespace Gametek.Monogame.Managers
         private static MouseState cMouse, pMouse;
         private static KeyboardState cKey, pKey;
 
-        private static Texture2D _cursor;
-        public static Texture2D Cursor
-        {
-            get { return _cursor; }
-            set { _cursor = value; }
-        }
+        private static Texture2D Cursor;
+        private static Rectangle cursorSource = new Rectangle(0, 0, 26, 26);
+        private static Rectangle cursorDest = new Rectangle(0, 0, 16, 16);
 
         public static int ScrollWheelDelta
         {
@@ -42,14 +49,14 @@ namespace Gametek.Monogame.Managers
             }
         }
         
-        public static Vector2 MousePosition
+        public static Point MousePosition
         {
-            get { return new Vector2(cMouse.X, cMouse.Y); }
+            get { return cMouse.Position; }
         }
 
         public static void LoadContent(ContentManager content)
         {
-            _cursor = content.Load<Texture2D>("Cursors\\cursors");
+            Cursor = content.Load<Texture2D>("Cursors\\cursors");
         }
 
         public static void Update()
@@ -59,82 +66,59 @@ namespace Gametek.Monogame.Managers
 
             pKey = cKey;
             cKey = Keyboard.GetState();
+
+            // Set Cursor Rect.
+            if (IsMouseDown(MouseButton.RightButton))
+            {
+                cursorSource.X = 52; cursorSource.Y = 0;
+            }
+            else
+                cursorSource.X = 0; cursorSource.Y = 0;
         }
         public static void Draw(GameTime gameTime)
         {
-            Rectangle sourceRectangle      = new Rectangle(0,0,26,26);
-            Rectangle destinationRectangle = new Rectangle((int)MousePosition.X, (int)MousePosition.Y, 16, 16);
+            cursorDest.X = (int)MousePosition.X;
+            cursorDest.Y = (int)MousePosition.Y;
 
-            ScreenManager.spriteBatch.Draw(Cursor, destinationRectangle, sourceRectangle, Color.White);
+            ScreenManager.spriteBatch.Draw(Cursor, cursorDest, cursorSource, Color.White);
         }
 
         public static bool IsKeyDown(Keys key)
         {
-            return cKey.IsKeyDown(key);
+            return cKey.IsKeyDown(key) && pKey.IsKeyDown(key);
         }
         public static bool IsKeyPress(Keys key)
         {
             return cKey.IsKeyDown(key) && !pKey.IsKeyDown(key);
         }
-        public static bool IsRightMouseDown
-        {
-            get { return cMouse.RightButton == ButtonState.Pressed; }
-        }
 
-        public static Vector3 GetMouseDragDelta()
+        public static bool IsMouseDown(MouseButton Button)
         {
-            Vector3 res = new Vector3();
-
-            if (cMouse.RightButton == ButtonState.Pressed)
+            switch(Button)
             {
-                res.X = cMouse.Position.X - pMouse.Position.X;
-                res.Z = cMouse.Position.Y - pMouse.Position.Y;
+                case MouseButton.LeftButton:
+                    return (cMouse.LeftButton == ButtonState.Pressed && pMouse.LeftButton == ButtonState.Pressed);
+                case MouseButton.RightButton:
+                    return (cMouse.RightButton == ButtonState.Pressed && pMouse.RightButton == ButtonState.Pressed);
+                case MouseButton.MiddleButton:
+                    return (cMouse.MiddleButton == ButtonState.Pressed && pMouse.MiddleButton == ButtonState.Pressed);
+                case MouseButton.ExtraButton1:
+                    return (cMouse.XButton1 == ButtonState.Pressed && pMouse.XButton1 == ButtonState.Pressed);
+                case MouseButton.ExtraButton2:
+                    return (cMouse.XButton2 == ButtonState.Pressed && pMouse.XButton2 == ButtonState.Pressed);
+                default:
+                    return false;
             }
-
-            return res;
         }
 
         public static Vector3 GetMouseDragDelta(Matrix projection, Matrix view)
         {
             Vector3 res = new Vector3();
 
-            if (cMouse.RightButton == ButtonState.Pressed)
-                res = SelectedVector3(cMouse.Position, projection, view) - SelectedVector3(pMouse.Position, projection, view);
+            if (IsMouseDown(MouseButton.RightButton))
+                res = GeometryHelper.WorldPosition(cMouse.Position, projection, view) - GeometryHelper.WorldPosition(pMouse.Position, projection, view);
 
             return res;
-        }
-
-        public static Vector3 SelectedVector3(Matrix projection, Matrix view)
-        {
-            return SelectedVector3(cMouse.Position, projection, view);
-        }
-
-        public static Vector3 WorldPosition(Vector2 MouseLocation, Viewport viewport, Matrix proj, Matrix view, Matrix world)
-        {
-            Vector3 nearPoint = viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 0.0f), proj, view, world);
-            Vector3 farPoint = viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 1.0f), proj, view, world);
-            Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
-
-            return (nearPoint - direction * (nearPoint.Y / direction.Y));
-        }
-
-        public static Vector3 SelectedVector3(Point mouseLocation, Matrix projection, Matrix view)
-        {
-            Vector3 nearPoint = ScreenManager.Viewport.Unproject(new Vector3(mouseLocation.X, mouseLocation.Y, 0.0f), projection, view, Matrix.Identity);
-            Vector3 farPoint = ScreenManager.Viewport.Unproject(new Vector3(mouseLocation.X, mouseLocation.Y, 1.0f), projection, view, Matrix.Identity);
-            Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
-
-            Plane p = new Plane(0, -1, 0, 0);
-            Ray MouseRay = new Ray(nearPoint, direction);
-
-            // calculate distance of intersection point from r.origin
-            float denominator = Vector3.Dot(p.Normal, MouseRay.Direction);
-            float numerator = Vector3.Dot(p.Normal, MouseRay.Position) + p.D;
-            float t = -(numerator / denominator);
-
-            Vector3 pickedPosition = nearPoint + direction * t;
-
-            return pickedPosition;
         }
     }
 }
