@@ -1,5 +1,4 @@
 ﻿using Gametek.Monogame;
-using Gametek.Monogame.Manager;
 using Gametek.Monogame.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +8,6 @@ namespace Microcosm
     public sealed class Asteroid
     {
         public bool Selected { get; private set; }
-        public bool InViewPort { get; set; }
 
         public string Name { get; private set; }
 
@@ -58,27 +56,24 @@ namespace Microcosm
             this.Position  = Position;
             this.Direction = Direction;
             this.Size      = Size;
-            this.InViewPort = true;
 
             this.Name = GetName();
         }
 
         public void Update(GameTime gameTime)
         {
-            Position = Vector2.Add(Position, Direction);
-
-            if (BoundingBox.Contains(InputManager.MousePosition))
-                this.Selected = true;
-            else
-                this.Selected = false;            
+            Position = Vector2.Add(Position, Direction);          
         }
-
         public void Draw(GameTime gameTime, SpriteBatchEx spriteBatch)
-        {
-            //spriteBatch.Draw(Box, Destination, Color.Red);
+        { 
             spriteBatch.Draw(Texture, BoundingBox, Color.White);
 
-            AsteroidIndicator.Draw(spriteBatch, this);            
+            AsteroidIndicator.Draw(spriteBatch, this);
+        }
+        
+        public void SetSelected(bool Value)
+        {
+            Selected = Value;
         }
 
         public static Vector2 GetDirection()

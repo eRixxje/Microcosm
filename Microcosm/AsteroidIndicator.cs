@@ -45,7 +45,10 @@ namespace Microcosm
             spriteBatch.Draw(ind_f, new Vector2(Position.X + 54, Position.Y + 10), null, Color.White);
 
             // Name
-            spriteBatch.DrawStringShadowed(AssetManager.ControlFont, asteroid.Name, new Vector2(Position.X, Position.Y + 20), Theme.BEIGE_LIGHT, Theme.BEIGE_DARK);
+            spriteBatch.DrawStringShadowed(AssetManager.ControlFont, asteroid.Name, new Vector2(Position.X, Position.Y + 20), Theme.BEIGE_LIGHT, Color.Black);
+
+            // Pos
+            spriteBatch.DrawStringShadowed(AssetManager.ControlFont, asteroid.PositionString, new Vector2(Position.X, Position.Y + 30), Theme.BEIGE_LIGHT, Color.Black);
         }
     }
 }

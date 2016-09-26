@@ -1,22 +1,27 @@
 ﻿using Gametek.Monogame;
+using Gametek.Monogame.Manager;
 using Gametek.Monogame.Util;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Microcosm
 {
     public sealed class Galaxy
     {
         private List<Asteroid> asteroids = new List<Asteroid>();
-        private Rectangle ViewPort;
+        public List<Asteroid> render;
 
-        Grid grid;
+        private Grid _grid;
+        public GridCam Camera;
 
         public Galaxy()
         {
-            grid = new Grid(20, 12, 50, 50);
+            _grid = new Grid(2000/50, 2000/50, 50, 50);
 
-            ViewPort = new Rectangle(grid.OffSet, grid.OffSet, grid.Width, grid.Height);
+            Camera = new GridCam(new Viewport(50, 50, _grid.Width, _grid.Height));
         }
 
         public void Initialize()
@@ -26,30 +31,63 @@ namespace Microcosm
 
         public void LoadContent()
         {
-            grid.LoadContent();
+            _grid.LoadContent();
 
             for (int i = 0; i < 10; i++)
             {
-                asteroids.Add(new Asteroid(new Vector2(Rand.Next(50, 1000), Rand.Next(50, 600)), Asteroid.GetDirection(), Asteroid.GetSize()));
+                asteroids.Add(new Asteroid(new Vector2(Rand.Next(0, 2000), Rand.Next(0, 2000)), Asteroid.GetDirection(), Asteroid.GetSize()));
             }
         }
 
         public void Update(GameTime gameTime)
         {
-            foreach(var a in asteroids)
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            render = new List<Asteroid>();
+
+            // Move to cam?
+            Vector2 worldPosition = Camera.ScreenToWorld(InputManager.MousePosition.ToVector2());
+
+            foreach (var a in asteroids)
             {
-                if (a.InViewPort && ViewPort.Contains(a.Position))
-                    a.Update(gameTime);
+                a.Update(gameTime);
+
+                // Mouse Selection
+                if (a.BoundingBox.Contains(worldPosition))
+                    a.SetSelected(true);
                 else
-                    a.InViewPort = false;
+                    a.SetSelected(false);
+
+                Vector2 astPosition = Camera.WorldToScreen(a.Position);
+                if (Camera.ViewPort.Bounds.Contains(astPosition))
+                {
+                    //Debug.WriteLine("{0} : {1}", a.Name, astPosition);
+                    render.Add(a);
+                }
             }
+
+             // Move
+            if (InputManager.IsKeyDown(Keys.W))
+                Camera.Move(new Vector2(0, -250) * deltaTime);
+
+            if (InputManager.IsKeyDown(Keys.S))
+                Camera.Move(new Vector2(0, 250) * deltaTime);
+
+            if (InputManager.IsKeyDown(Keys.A))
+                Camera.Move(new Vector2(-250, 0) * deltaTime);
+
+            if (InputManager.IsKeyDown(Keys.D))
+                Camera.Move(new Vector2(250, 0) * deltaTime);
         }
         public void Draw(GameTime gameTime, SpriteBatchEx spriteBatch)
         {
-            grid.Draw(gameTime, spriteBatch);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
 
-            foreach (var a in asteroids)
+            _grid.Draw(gameTime, spriteBatch);
+            foreach (var a in render)
+            {
                 a.Draw(gameTime, spriteBatch);
-        }        
+            }
+            spriteBatch.End();
+        }   
     }
 }

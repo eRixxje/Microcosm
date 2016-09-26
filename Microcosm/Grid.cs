@@ -1,6 +1,5 @@
 ﻿using Gametek.Monogame;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace Microcosm
@@ -41,16 +40,10 @@ namespace Microcosm
 
         public void Draw(GameTime gameTime, SpriteBatchEx spriteBatch)
         {
-            int i = 1;
-
             foreach (Rectangle rect in gridlist)
             {  
-                if (i % 2 != 0)
-                    spriteBatch.Draw(Theme.GRID_LINE, rect, Color.White);
-                else
-                    spriteBatch.Draw(Theme.GRID_LINE1, rect, Color.White);
-
-                i++;
+                //if (i % 2 != 0)
+                spriteBatch.Draw(Theme.GRID_LINE, rect, Color.White);
             }
         }
 

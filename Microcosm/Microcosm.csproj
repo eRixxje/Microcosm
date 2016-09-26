@@ -43,6 +43,7 @@
     <Compile Include="AsteroidIndicator.cs" />
     <Compile Include="Galaxy.cs" />
     <Compile Include="Grid.cs" />
+    <Compile Include="GridCam.cs" />
     <Compile Include="Microcosm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
