@@ -3,6 +3,7 @@ using Gametek.Monogame.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -113,26 +114,29 @@ namespace Microcosm
             int Cols = Viewport.Width / CellSize;
             int Rows = Viewport.Height / CellSize;
 
-            for (int x = 0; x <= Cols; x++)
+            for (int x = 1; x <= Cols; x++)
             {
+                int ratio = (int)Camera.Position.X / 50;
+                //Debug.WriteLine(ratio);
+
                 Rectangle lineX = new Rectangle(
-                                (x * CellSize) + Position.X,            // X
+                                ((x + ratio) * CellSize) + Position.X,  // X
                                 Position.Y + (int)Camera.Position.Y,    // Y
-                                1,                                      // Height
-                                Size.Y);                                // Width
+                                1,                                      // Width
+                                Size.Y);                                // Height
 
                 gridlist.Add(lineX);
             }
 
-            for (int y = 0; y <= Rows; y++)
-            {
-                Rectangle lineY = new Rectangle(
-                                Position.X + (int)Camera.Position.X,    // X
-                                (y * (CellSize)) + Position.Y,          // Y
-                                Size.X,                                 // Height
-                                1);                                     // Width
-                gridlist.Add(lineY);
-            }
+            //for (int y = 0; y <= Rows; y++)
+            //{
+            //    Rectangle lineY = new Rectangle(
+            //                    Position.X + (int)Camera.Position.X,    // X
+            //                    (y * (CellSize)) + Position.Y,          // Y
+            //                    Size.X,                                 // Width
+            //                    1);                                     // Height
+            //    gridlist.Add(lineY);
+            //}
         }
     }
 }
