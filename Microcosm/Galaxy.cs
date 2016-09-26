@@ -14,14 +14,14 @@ namespace Microcosm
         private List<Asteroid> asteroids = new List<Asteroid>();
         public List<Asteroid> render;
 
-        private Grid _grid;
+        //private Grid _grid;
         public GridCam Camera;
 
         public Galaxy()
         {
-            _grid = new Grid(2000/50, 2000/50, 50, 50);
+            //_grid = new Grid(2000/50, 2000/50, 50, 50);
 
-            Camera = new GridCam(new Viewport(50, 50, _grid.Width, _grid.Height));
+            Camera = new GridCam(new Viewport(50, 50, 1071, 661));
         }
 
         public void Initialize()
@@ -31,7 +31,7 @@ namespace Microcosm
 
         public void LoadContent()
         {
-            _grid.LoadContent();
+            //_grid.LoadContent();
 
             for (int i = 0; i < 10; i++)
             {
@@ -82,7 +82,7 @@ namespace Microcosm
         {
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
 
-            _grid.Draw(gameTime, spriteBatch);
+            //_grid.Draw(gameTime, spriteBatch);
             foreach (var a in render)
             {
                 a.Draw(gameTime, spriteBatch);

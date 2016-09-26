@@ -17,7 +17,9 @@ namespace Gametek.Monogame
             };
 
             Content.RootDirectory = "Content";
-
+            // Position Center
+            Window.Position = new Point(50, 50);
+            
             // Forward Window Size Changed Events to the ScreenManager.
             Window.ClientSizeChanged += RenderManager.WindowSizeChanged;
         }
