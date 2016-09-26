@@ -80,6 +80,7 @@ namespace Microcosm
             foreach (Rectangle rect in gridlist)
             {
                 spriteBatch.Draw(Theme.GRID_LINE, rect, Color.White);
+                //spriteBatch.DrawString(AssetManager.ControlFont, string.Format("{0}", rect.X), rect.Location.ToVector2(), Color.White);
             }
             
             // Galaxy
@@ -114,13 +115,13 @@ namespace Microcosm
             int Cols = Viewport.Width / CellSize;
             int Rows = Viewport.Height / CellSize;
 
-            for (int x = 1; x <= Cols; x++)
-            {
-                int ratio = (int)Camera.Position.X / 50;
-                //Debug.WriteLine(ratio);
+            int ratioX = (int)Math.Ceiling(Camera.Position.X / CellSize);
+            int ratioY = (int)Math.Ceiling(Camera.Position.Y / CellSize);
 
+            for (int x = 0; x < Cols; x++)
+            {
                 Rectangle lineX = new Rectangle(
-                                ((x + ratio) * CellSize) + Position.X,  // X
+                                Position.X + ((x + ratioX) * CellSize), // X
                                 Position.Y + (int)Camera.Position.Y,    // Y
                                 1,                                      // Width
                                 Size.Y);                                // Height
@@ -128,15 +129,15 @@ namespace Microcosm
                 gridlist.Add(lineX);
             }
 
-            //for (int y = 0; y <= Rows; y++)
-            //{
-            //    Rectangle lineY = new Rectangle(
-            //                    Position.X + (int)Camera.Position.X,    // X
-            //                    (y * (CellSize)) + Position.Y,          // Y
-            //                    Size.X,                                 // Width
-            //                    1);                                     // Height
-            //    gridlist.Add(lineY);
-            //}
+            for (int y = 0; y < Rows; y++)
+            {
+                Rectangle lineY = new Rectangle(
+                                Position.X + (int)Camera.Position.X,      // X
+                                ((y + ratioY) * CellSize) + Position.Y,   // Y
+                                Size.X,                                   // Width
+                                1);                                       // Height
+                gridlist.Add(lineY);
+            }
         }
     }
 }
