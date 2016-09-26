@@ -10,6 +10,8 @@ namespace Microcosm
         public Point Size { get; private set; }
         public int CellSize { get; private set; }
 
+        public Viewport Viewport { get; private set; }
+
         private Texture2D hblock;
         private Texture2D vblock;
         private Texture2D Border;
@@ -19,6 +21,7 @@ namespace Microcosm
             Position = position;
             Size     = size;
             CellSize = cellSize;
+            Viewport = new Viewport(Position.X, Position.Y, Size.X, Size.Y);
         }
 
         public void LoadContent()
