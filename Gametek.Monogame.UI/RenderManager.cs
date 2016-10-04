@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace Gametek.Monogame.Manager
+namespace Gametek.Monogame.UI
 {
     public static class RenderManager
     {

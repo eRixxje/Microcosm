@@ -1,5 +1,4 @@
 ﻿using Gametek.Monogame;
-using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,7 +6,7 @@ namespace Gametek.Monogame
 {
     public abstract class RenderTarget
     {
-        protected SpriteBatch spriteBatch;
+        protected SpriteBatchEx spriteBatch;
         //public ControlList Controls;
 
         public bool Enabled { get; set; }
@@ -23,7 +22,7 @@ namespace Gametek.Monogame
         }
         public virtual void LoadContent()
         {
-            spriteBatch = new SpriteBatch(RenderManager.GraphicsDevice);
+            spriteBatch = new SpriteBatchEx(RenderManager.GraphicsDevice);
 
             SetupControls();
         }

@@ -1,5 +1,6 @@
 ﻿using Gametek.Monogame;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace Microcosm
@@ -38,7 +39,7 @@ namespace Microcosm
             BuildGrid();
         }
 
-        public void Draw(GameTime gameTime, SpriteBatchEx spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (Rectangle rect in gridlist)
             {  

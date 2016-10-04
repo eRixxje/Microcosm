@@ -1,11 +1,7 @@
-﻿using Gametek.Monogame;
+﻿using System.Collections.Generic;
 using Gametek.Monogame.Manager;
 using Gametek.Monogame.Util;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Microcosm
 {
@@ -18,7 +14,10 @@ namespace Microcosm
         {
             for (int i = 0; i < 10; i++)
             {
-                asteroids.Add(new Asteroid(new Vector2(Rand.Next(0, 2000), Rand.Next(0, 2000)), Asteroid.GetDirection(), Asteroid.GetSize()));
+                Asteroid a = new Asteroid(new Vector2(Rand.Next(0, 2000), Rand.Next(0, 2000)), Asteroid.GetDirection(), Asteroid.GetSize());
+                a.LoadContent();
+
+                asteroids.Add(a);
             }
         }
 
@@ -27,22 +26,50 @@ namespace Microcosm
             render = new List<Asteroid>();
 
             Vector2 worldPosition = Camera.ScreenToWorld(InputManager.MousePosition.ToVector2());
-            foreach (var a in asteroids)
+            for (int i = 0; i < asteroids.Count; i++)
             {
-                a.Update(gameTime);
+                asteroids[i].Update(gameTime);
 
-                if (a.BoundingBox.Contains(worldPosition))
-                    a.SetSelected(true);
+                // Selection
+                if (asteroids[i].Bounds.Contains(worldPosition))
+                    asteroids[i].SetSelected(true);
                 else
-                    a.SetSelected(false);
+                    asteroids[i].SetSelected(false);
 
-                Vector2 astPosition = Camera.WorldToScreen(a.Position);
+                // Collisions
+                for (int j = 0; j < asteroids.Count; j++)
+                {
+                    if (asteroids[i] != asteroids[j] && (!asteroids[i].IsCollided && !asteroids[j].IsCollided))
+                    {
+                        if (asteroids[i].Bounds.Intersects(asteroids[j].Bounds))
+                        {
+                            asteroids[i].SetCollided(true);
+                            asteroids[j].SetCollided(true);
+                        }
+                    }
+                }
+
+                // Renderlist
+                Vector2 astPosition = Camera.WorldToScreen(asteroids[i].Position);
                 if (Camera.ViewPort.Bounds.Contains(astPosition))
                 {
-                    render.Add(a);
+                    render.Add(asteroids[i]);
                 }
             }
 
+            // Remove Dead asteroids
+            for (int r = 0; r < asteroids.Count; r++)
+            {
+                if (asteroids[r].IsCollided)
+                    asteroids.Remove(asteroids[r]);
+            }
+
+            if (InputManager.IsMouseClicked(MouseButton.RightButton))
+            {
+                Asteroid na = new Asteroid(Camera.ScreenToWorld(InputManager.MousePosition.ToVector2()), Asteroid.GetDirection(), Asteroid.GetSize());
+                na.LoadContent();
+                asteroids.Add(na);
+            }
 
         } 
     }

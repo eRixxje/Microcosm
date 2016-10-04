@@ -1,18 +1,16 @@
-﻿using Gametek.Monogame;
+﻿using System;
+using System.Collections.Generic;
+using Gametek.Monogame;
 using Gametek.Monogame.Manager;
+using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Microcosm
 {
-    public sealed class GalaxyGrid
-    {
-        public Point Position { get; private set; }
-        public Point Size { get; private set; }
+    public sealed class GalaxyGrid : UIElement
+    {     
         public int CellSize { get; private set; }
         public Viewport Viewport { get; private set; }
 
@@ -26,12 +24,12 @@ namespace Microcosm
         private Texture2D vblock;
         private Texture2D Border;
 
-        public GalaxyGrid(Point position, Point size, int cellSize)
+        public GalaxyGrid(Vector2 position, Vector2 size, int cellSize)
         {
             Position = position;
             Size     = size;
             CellSize = cellSize;
-            Viewport = new Viewport(Position.X, Position.Y, Size.X, Size.Y);
+            Viewport = new Viewport((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
 
             Camera = new GridCam(Viewport);
             Galaxy = new Galaxy();
@@ -39,14 +37,14 @@ namespace Microcosm
 
         public void LoadContent()
         {
-            vblock = Geometry.Rectangle(new Vector2(3, 20), Theme.BEIGE_LIGHT);
-            hblock = Geometry.Rectangle(new Vector2(20, 3), Theme.BEIGE_LIGHT);
-            Border = Geometry.Border(Size.ToVector2(), 1, Theme.BEIGE_MEDIUM);
+            vblock = Geometry.Rectangle(RenderManager.GraphicsDevice, new Vector2(3, 20), Theme.BEIGE_LIGHT);
+            hblock = Geometry.Rectangle(RenderManager.GraphicsDevice, new Vector2(20, 3), Theme.BEIGE_LIGHT);
+            Border = Geometry.Border(RenderManager.GraphicsDevice, Size, 1, Theme.BEIGE_MEDIUM);
 
             Galaxy.LoadContent();
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -73,7 +71,7 @@ namespace Microcosm
                 Camera.ZoomIn(0.2f);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatchEx spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Grid
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
@@ -94,7 +92,7 @@ namespace Microcosm
             spriteBatch.Begin();
             
             // Map Borders
-            spriteBatch.Draw(Border, Position.ToVector2());
+            spriteBatch.Draw(Border, Position);
 
             // Map Anchors
             spriteBatch.Draw(vblock, new Vector2(Position.X - 1, Position.Y - 1));
@@ -106,6 +104,8 @@ namespace Microcosm
             spriteBatch.Draw(vblock, new Vector2(Position.X + Size.X - 2, Position.Y + Size.Y - 19));
             spriteBatch.Draw(hblock, new Vector2(Position.X + Size.X - 19, Position.Y + Size.Y - 2));
             spriteBatch.End();
+
+            base.Draw(gameTime, spriteBatch);
         }
 
         private void BuildGrid()
@@ -121,10 +121,10 @@ namespace Microcosm
             for (int x = 0; x < Cols; x++)
             {
                 Rectangle lineX = new Rectangle(
-                                Position.X + ((x + ratioX) * CellSize), // X
-                                Position.Y + (int)Camera.Position.Y,    // Y
+                                (int)Position.X + ((x + ratioX) * CellSize), // X
+                                (int)Position.Y + (int)Camera.Position.Y,    // Y
                                 1,                                      // Width
-                                Size.Y);                                // Height
+                                (int)Size.Y);                                // Height
 
                 gridlist.Add(lineX);
             }
@@ -132,9 +132,9 @@ namespace Microcosm
             for (int y = 0; y < Rows; y++)
             {
                 Rectangle lineY = new Rectangle(
-                                Position.X + (int)Camera.Position.X,      // X
-                                ((y + ratioY) * CellSize) + Position.Y,   // Y
-                                Size.X,                                   // Width
+                                (int)Position.X + (int)Camera.Position.X,      // X
+                                ((y + ratioY) * CellSize) + (int)Position.Y,   // Y
+                                (int)Size.X,                                   // Width
                                 1);                                       // Height
                 gridlist.Add(lineY);
             }

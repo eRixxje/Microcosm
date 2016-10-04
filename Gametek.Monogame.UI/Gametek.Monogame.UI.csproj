@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E9331326-2D79-4647-A55A-116A9D93174A}</ProjectGuid>
+    <ProjectGuid>{B9F1BA3A-1AC8-4915-A0A8-5E53F8253400}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gametek.Monogame</RootNamespace>
-    <AssemblyName>Gametek.Monogame</AssemblyName>
+    <AssemblyName>Gametek.Monogame.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,20 +44,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Geometry.cs" />
-    <Compile Include="Manager\ContentManager.cs" />
-    <Compile Include="GameBase.cs" />
-    <Compile Include="Manager\InputManager.cs" />
-    <Compile Include="Primitives\Circle.cs" />
-    <Compile Include="SpriteBatchExtensions.cs" />
+    <Compile Include="Cursor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\UIElement.cs" />
-    <Compile Include="UI\Cursor.cs" />
-    <Compile Include="UI\RenderManager.cs" />
-    <Compile Include="UI\RenderTarget.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="RenderManager.cs" />
+    <Compile Include="RenderTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
