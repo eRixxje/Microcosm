@@ -55,25 +55,30 @@ namespace Microcosm
             Position = Vector2.Zero;
         }
 
-        public void Move(Vector2 direction)
+        public void DoMove(Vector2 direction)
         {
             Position += Vector2.Transform(direction, Matrix.CreateRotationZ(-Rotation));
         }
 
-        public void Rotate(float deltaRadians)
+        public void DoRotate(float deltaRadians)
         {
             Rotation += deltaRadians;
         }
 
-        public void ZoomIn(float deltaZoom)
+        public void DoZoom(float deltaZoom)
         {
             ClampZoom(Zoom + deltaZoom);
         }
 
-        public void ZoomOut(float deltaZoom)
-        {
-            ClampZoom(Zoom - deltaZoom);
-        }
+        //public void ZoomIn(float deltaZoom)
+        //{
+        //    ClampZoom(Zoom + deltaZoom);
+        //}
+
+        //public void ZoomOut(float deltaZoom)
+        //{
+        //    ClampZoom(Zoom - deltaZoom);
+        //}
 
         private void ClampZoom(float value)
         {

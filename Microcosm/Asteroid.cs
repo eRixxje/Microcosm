@@ -40,7 +40,7 @@ namespace Microcosm
         {
             this.Name    = GetName();
             this.Texture = GetAsteroidTexture(SizeClass);
-            this.Bounds  = new Circle(Position, new Vector2(Texture.Width/2), Texture.Width/2);
+            this.Bounds  = new Circle(Position, Texture.Width/2);
 
             indicator = new AsteroidIndicator(this);
         }

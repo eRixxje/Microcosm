@@ -11,7 +11,7 @@ namespace Gametek.Monogame.UI
 
         private static GraphicsDeviceManager _graphicsDeviceManager;
 
-        private static List<RenderTarget> screens = new List<RenderTarget>();
+        private static Dictionary<string, RenderTarget> screens = new Dictionary<string, RenderTarget>();
 
         public static GraphicsDevice GraphicsDevice
         {
@@ -23,20 +23,26 @@ namespace Gametek.Monogame.UI
 
         public static void Add(RenderTarget Screen)
         {
-            if (!screens.Contains(Screen))
+            if (!screens.ContainsKey(Screen.Name))
             {
                 Screen.Initialize();
                 Screen.LoadContent();
-                screens.Add(Screen);
+                screens.Add(Screen.Name, Screen);
             }
         }
         public static void Remove(RenderTarget Screen)
         {
-            if (screens.Contains(Screen))
+            if (screens.ContainsKey(Screen.Name))
             {
                 Screen.UnloadContent();
-                screens.Remove(Screen);
+                screens.Remove(Screen.Name);
             }
+        }
+
+        public static void Switch(string fromName, string toName)
+        {
+            screens[toName].IsEnabled = true;
+            screens[fromName].IsEnabled = false;
         }
 
         public static void Initialize(GraphicsDeviceManager device)
@@ -48,20 +54,18 @@ namespace Gametek.Monogame.UI
 
         public static void Update(GameTime gameTime)
         {
-            for (int i = 0; i < screens.Count; i++)
+            foreach(KeyValuePair<string, RenderTarget> screen in screens)
             {
-                if (screens[i].Enabled)
-                    screens[i].Update(gameTime);
+                if (screen.Value.IsEnabled)
+                    screen.Value.Update(gameTime);
             }
         }
         public static void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.Black);
-
-            for (int i = 0; i < screens.Count; i++)
+            foreach (KeyValuePair<string, RenderTarget> screen in screens)
             {
-                if (screens[i].Enabled)
-                    screens[i].Draw(gameTime);
+                if (screen.Value.IsEnabled)
+                    screen.Value.Draw(gameTime);
             }
         }
 

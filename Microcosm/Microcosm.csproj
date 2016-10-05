@@ -43,11 +43,11 @@
     <Compile Include="AsteroidIndicator.cs" />
     <Compile Include="Galaxy.cs" />
     <Compile Include="GalaxyGrid.cs" />
-    <Compile Include="Grid.cs" />
     <Compile Include="GridCam.cs" />
     <Compile Include="Microcosm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\AstScreen.cs" />
     <Compile Include="Screens\MainScreen.cs" />
     <Compile Include="Screens\MapScreen.cs" />
     <Compile Include="Theme.cs" />

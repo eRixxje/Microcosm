@@ -16,6 +16,7 @@ namespace Gametek.Monogame.UI
         public Rectangle Bounds;
 
         public bool IsSelected { get; set; }
+        public bool IsVisible { get; set; }
 
 
         public string PositionString

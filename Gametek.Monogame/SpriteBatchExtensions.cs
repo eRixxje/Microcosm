@@ -131,7 +131,7 @@ namespace Gametek.Monogame
 
         public static void DrawCircle(this SpriteBatch spriteBatch, Circle circle, int sides, Color color, float thickness = 1f)
         {
-            DrawCircle(spriteBatch, circle.AbsCenter, circle.Radius, sides, color, thickness);
+            DrawCircle(spriteBatch, circle.Center, circle.Radius, sides, color, thickness);
         }
 
         public static void DrawCircle(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, Color color, float thickness = 1f)

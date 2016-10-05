@@ -32,12 +32,10 @@ namespace Gametek.Monogame
 
             base.Initialize();
         }
-
         protected override void LoadContent()
         {
             base.LoadContent();
         }
-
         protected override void UnloadContent()
         {
             base.UnloadContent();
@@ -50,7 +48,6 @@ namespace Gametek.Monogame
 
             base.Update(gameTime);
         }
-
         protected override void Draw(GameTime gameTime)
         {
             RenderManager.Draw(gameTime);

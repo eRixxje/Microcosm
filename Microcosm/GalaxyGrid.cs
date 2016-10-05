@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gametek.Monogame;
-using Gametek.Monogame.Manager;
 using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using Gametek.Monogame.Manager;
 
 namespace Microcosm
 {
     public sealed class GalaxyGrid : UIElement
-    {     
+    {
+        public static List<Asteroid> render = new List<Asteroid>();
+
         public int CellSize { get; private set; }
         public Viewport Viewport { get; private set; }
 
         List<Rectangle> gridlist;
-
-        public Galaxy Galaxy { get; private set; }
 
         public GridCam Camera;
 
@@ -32,7 +31,6 @@ namespace Microcosm
             Viewport = new Viewport((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
 
             Camera = new GridCam(Viewport);
-            Galaxy = new Galaxy();
         }
 
         public void LoadContent()
@@ -40,37 +38,41 @@ namespace Microcosm
             vblock = Geometry.Rectangle(RenderManager.GraphicsDevice, new Vector2(3, 20), Theme.BEIGE_LIGHT);
             hblock = Geometry.Rectangle(RenderManager.GraphicsDevice, new Vector2(20, 3), Theme.BEIGE_LIGHT);
             Border = Geometry.Border(RenderManager.GraphicsDevice, Size, 1, Theme.BEIGE_MEDIUM);
-
-            Galaxy.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
-            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            Galaxy.Update(gameTime, Camera);
-
             BuildGrid();
 
-            // Move
-            if (InputManager.IsKeyDown(Keys.W))
-                Camera.Move(new Vector2(0, -250) * deltaTime);
+            render = new List<Asteroid>();
 
-            if (InputManager.IsKeyDown(Keys.S))
-                Camera.Move(new Vector2(0, 250) * deltaTime);
+            Vector2 worldPosition = Camera.ScreenToWorld(InputManager.MousePosition.ToVector2());
+            for (int i = 0; i < Galaxy.asteroids.Count; i++)
+            {
+                // Selection
+                if (Galaxy.asteroids[i].Bounds.Contains(worldPosition))
+                {
+                    if (InputManager.IsMouseDoubleClicked(MouseButton.LeftButton))
+                        Galaxy.asteroids[i].SetSelected(true);
+                    else
+                        Galaxy.asteroids[i].SetSelected(false);
+                }
 
-            if (InputManager.IsKeyDown(Keys.A))
-                Camera.Move(new Vector2(-250, 0) * deltaTime);
+                // Renderlist
+                Vector2 astPosition = Camera.WorldToScreen(Galaxy.asteroids[i].Position);
+                if (Camera.ViewPort.Bounds.Contains(astPosition))
+                {
+                    render.Add(Galaxy.asteroids[i]);
+                }
+            }
 
-            if (InputManager.IsKeyDown(Keys.D))
-                Camera.Move(new Vector2(250, 0) * deltaTime);
-
-            if (InputManager.MouseZoom == ScrollDirection.ZoomOut)
-                Camera.ZoomOut(0.2f);
-            if (InputManager.MouseZoom == ScrollDirection.ZoomIn)
-                Camera.ZoomIn(0.2f);
+            if (InputManager.IsMouseClicked(MouseButton.RightButton))
+            {
+                Asteroid na = new Asteroid(Camera.ScreenToWorld(InputManager.MousePosition.ToVector2()), Asteroid.GetDirection(), Asteroid.GetSize());
+                na.LoadContent();
+                Galaxy.asteroids.Add(na);
+            }
         }
-
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Grid
@@ -82,7 +84,7 @@ namespace Microcosm
             }
             
             // Galaxy
-            foreach (var a in Galaxy.render)
+            foreach (var a in render)
             {
                 a.Draw(gameTime, spriteBatch);
             }
@@ -106,6 +108,15 @@ namespace Microcosm
             spriteBatch.End();
 
             base.Draw(gameTime, spriteBatch);
+        }
+
+        public void Move(Vector2 direction)
+        {
+            Camera.DoMove(direction);
+        }
+        public void Zoom(float amount)
+        {
+            Camera.DoZoom(amount);
         }
 
         private void BuildGrid()

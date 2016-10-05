@@ -24,6 +24,10 @@ namespace Gametek.Monogame.Manager
         private static MouseState cMouse, pMouse;
         private static KeyboardState cKey, pKey;
 
+        private static double ClickTimer;
+        private const double TimerDelay = 500;
+        private static bool _doubleClicked;
+
         public static ScrollDirection MouseZoom
         {
             get
@@ -50,7 +54,22 @@ namespace Gametek.Monogame.Manager
             pKey = cKey;
             cKey = Keyboard.GetState();
 
-            
+            ClickTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (cMouse.LeftButton == ButtonState.Pressed && pMouse.LeftButton == ButtonState.Released)
+            {
+                if (ClickTimer < TimerDelay)
+                {
+                    _doubleClicked = true;
+                }
+                else
+                {
+                    _doubleClicked = false;
+                }
+
+                ClickTimer = 0;
+            }
+
+            System.Diagnostics.Debug.WriteLine("{0}", _doubleClicked);
         }
 
         public static bool IsKeyDown(Keys key)
@@ -97,6 +116,17 @@ namespace Gametek.Monogame.Manager
                     return (cMouse.XButton1 == ButtonState.Pressed && pMouse.XButton1 != ButtonState.Pressed);
                 case MouseButton.ExtraButton2:
                     return (cMouse.XButton2 == ButtonState.Pressed && pMouse.XButton2 != ButtonState.Pressed);
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsMouseDoubleClicked(MouseButton Button)
+        {
+            switch (Button)
+            {
+                case MouseButton.LeftButton:
+                    return _doubleClicked;
                 default:
                     return false;
             }

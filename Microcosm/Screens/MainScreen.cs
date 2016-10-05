@@ -1,5 +1,6 @@
 ﻿using Gametek.Monogame;
 using Gametek.Monogame.Manager;
+using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,7 +10,7 @@ namespace Microcosm.Screens
     {
         private Texture2D _background;
 
-        public MainScreen() : base(true)
+        public MainScreen(string name, bool isEnabled) : base(name, isEnabled)
         {
 
         }
@@ -31,7 +32,6 @@ namespace Microcosm.Screens
         {
             base.Update(gameTime);
         }
-
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
@@ -43,7 +43,8 @@ namespace Microcosm.Screens
 
         public override void HandleInput()
         {
-            
+            if (InputManager.IsKeyPress(Microsoft.Xna.Framework.Input.Keys.S))
+                StartGame();
         }
         public override void SetupControls()
         {
@@ -52,6 +53,15 @@ namespace Microcosm.Screens
         public override void UpdateControls()
         {
             
+        }
+
+        private void StartGame()
+        {
+            // Create a Galaxy and wait for it to be done.
+            Galaxy.Initialize();
+
+            // Switch to Galaxy Screen
+            RenderManager.Switch(Name, "GalaxyScreen");
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Gametek.Monogame;
-using Gametek.Monogame.UI;
+﻿using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,14 +6,17 @@ namespace Gametek.Monogame
 {
     public abstract class RenderTarget
     {
+        protected float deltaTime;
         protected SpriteBatch spriteBatch;
         //public ControlList Controls;
 
-        public bool Enabled { get; set; }
+        public string Name { get; set; }
+        public bool IsEnabled { get; set; }
 
-        public RenderTarget(bool IsEnabled = false)
+        public RenderTarget(string screenName, bool isEnabled = false)
         {
-            this.Enabled = IsEnabled;
+            this.Name = screenName;
+            this.IsEnabled = isEnabled;
         }
 
         public virtual void Initialize()
@@ -33,6 +35,8 @@ namespace Gametek.Monogame
         }
         public virtual void Update(GameTime gameTime)
         {
+            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             HandleInput();
             UpdateControls();
             //Controls.Update(gameTime);

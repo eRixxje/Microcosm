@@ -8,14 +8,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Microcosm
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Microcosm : GameBase
     {
-        //MainScreen _main;
-        MapScreen _map;
-
         Cursor cursor;
 
         public Microcosm() : base(1280, 720, false)
@@ -43,13 +37,11 @@ namespace Microcosm
         protected override void LoadContent()
         {
             Theme.LoadContent();
-            // TODO: use this.Content to load your game content here
+            
             cursor.LoadContent();
 
-            //_main = new MainScreen();
-            _map = new MapScreen();
-
-            RenderManager.Add(_map);
+            RenderManager.Add(new MainScreen("MainScreen", true));
+            RenderManager.Add(new MapScreen("GalaxyScreen", false));
         }
 
         /// <summary>
@@ -68,7 +60,8 @@ namespace Microcosm
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            
+            Galaxy.Update(gameTime);
+
             if (InputManager.IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -93,8 +86,6 @@ namespace Microcosm
             GraphicsDevice.Clear(Theme.BACKGROUND);
 
             // TODO: Add your drawing code here
-            
-
             base.Draw(gameTime);
 
             cursor.Draw(gameTime);
