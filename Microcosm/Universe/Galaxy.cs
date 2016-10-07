@@ -49,5 +49,10 @@ namespace Microcosm.Universe
                     Asteroids.Remove(Asteroids[i]); 
             }
         }
+
+        //public Asteroid GetAsteroidAt(Vector2 Position)
+        //{
+        //    return Asteroids.GetAtPosition(Position);
+        //}
     }
 }

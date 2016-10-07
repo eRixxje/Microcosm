@@ -24,6 +24,7 @@ namespace Microcosm.Universe
         private AsteroidIndicator indicator;
 
         public bool IsCollided { get; set; }
+        public bool IsHovered { get; set; }
 
         public Asteroid(Vector2 position, Vector2 direction, int asteroidSize)
         {
@@ -56,7 +57,7 @@ namespace Microcosm.Universe
         {
             base.Draw(gameTime, spriteBatch);
 
-            if (IsSelected)
+            if (IsHovered)
                 spriteBatch.Draw(Texture, Position, Theme.BLUE_MEDIUM);
             else
                 spriteBatch.Draw(Texture, Position, Theme.BLUE_LIGHT);

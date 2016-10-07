@@ -1,4 +1,5 @@
-﻿using Gametek.Monogame.Manager;
+﻿using Gametek.Monogame.Input;
+using Gametek.Monogame.Manager;
 using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 
@@ -8,7 +9,8 @@ namespace Gametek.Monogame
     {
         private GraphicsDeviceManager _graphicsDeviceManager;
 
-        public static InputManager Input { get; private set; }
+        public static KeyBoardListener Keyboard { get; private set; }
+        public static MouseListener Mouse { get; private set; }
 
         public GameBase(int Width, int Height, bool FullScreen)
         {
@@ -29,7 +31,8 @@ namespace Gametek.Monogame
 
         protected override void Initialize()
         {
-            Input = new InputManager();
+            Keyboard = new KeyBoardListener();
+            Mouse = new MouseListener();
 
             RenderManager.Initialize(_graphicsDeviceManager);
             AssetManager.Initialize(Content);
@@ -48,7 +51,9 @@ namespace Gametek.Monogame
         protected override void Update(GameTime gameTime)
         {
             RenderManager.Update(gameTime);
-            Input.Update(gameTime);
+
+            Keyboard.Update(gameTime);
+            Mouse.Update(gameTime);
 
             base.Update(gameTime);
         }

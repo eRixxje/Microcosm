@@ -43,7 +43,7 @@ namespace Microcosm.Screens
 
         public override void HandleInput()
         {
-            if (Microcosm.Input.IsKeyPress(Microsoft.Xna.Framework.Input.Keys.D1))
+            if (Microcosm.Keyboard.IsKeyPress(Microsoft.Xna.Framework.Input.Keys.D1))
                 StartGame();
         }
         public override void SetupControls()

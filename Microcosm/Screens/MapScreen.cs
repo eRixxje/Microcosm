@@ -1,4 +1,5 @@
 ﻿using Gametek.Monogame;
+using Gametek.Monogame.Input;
 using Gametek.Monogame.Manager;
 using Microcosm.UI;
 using Microsoft.Xna.Framework;
@@ -44,7 +45,7 @@ namespace Microcosm.Screens
             grid.Draw(gameTime, spriteBatch);
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(AssetManager.ControlFont, string.Format("Mouse: {0}, {1}", Microcosm.Input.MousePosition.X, Microcosm.Input.MousePosition.Y), new Vector2(10, 10), Color.White, Color.Black);
+            spriteBatch.DrawString(AssetManager.ControlFont, string.Format("Mouse: {0}, {1}", Microcosm.Mouse.Position.X, Microcosm.Mouse.Position.Y), new Vector2(10, 10), Color.White, Color.Black);
             spriteBatch.DrawString(AssetManager.ControlFont, string.Format("{0}", grid.Camera.Position), new Vector2(10, 20), Color.White, Color.Black);            
             spriteBatch.End();
 
@@ -53,21 +54,21 @@ namespace Microcosm.Screens
 
         public override void HandleInput()
         {
-            if (Microcosm.Input.IsKeyDown(Keys.W))
+            if (Microcosm.Keyboard.IsKeyDown(Keys.W))
                 grid.Move(new Vector2(0, -250) * deltaTime);
 
-            if (Microcosm.Input.IsKeyDown(Keys.S))
+            if (Microcosm.Keyboard.IsKeyDown(Keys.S))
                 grid.Move(new Vector2(0, 250) * deltaTime);
 
-            if (Microcosm.Input.IsKeyDown(Keys.A))
+            if (Microcosm.Keyboard.IsKeyDown(Keys.A))
                 grid.Move(new Vector2(-250, 0) * deltaTime);
 
-            if (Microcosm.Input.IsKeyDown(Keys.D))
+            if (Microcosm.Keyboard.IsKeyDown(Keys.D))
                 grid.Move(new Vector2(250, 0) * deltaTime);
 
-            if (Microcosm.Input.MouseZoom == ScrollDirection.ZoomOut)
+            if (Microcosm.Mouse.Zoom == ScrollDirection.ZoomOut)
                 grid.Zoom(-0.2f);
-            if (Microcosm.Input.MouseZoom == ScrollDirection.ZoomIn)
+            if (Microcosm.Mouse.Zoom == ScrollDirection.ZoomIn)
                 grid.Zoom(0.2f);
         }
         public override void SetupControls()

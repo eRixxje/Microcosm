@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Microcosm.Universe
 {
@@ -14,6 +15,17 @@ namespace Microcosm.Universe
         {
             item.UnloadContent();
             base.Remove(item);
+        }
+
+        public Asteroid GetAtPosition(Vector2 position)
+        {
+            for (int i = 0; i < this.Count; i++)
+            {
+                if (this[i].Bounds.Contains(position))
+                    return this[i];
+            }
+
+            return null;
         }
     }
 }

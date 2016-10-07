@@ -67,10 +67,10 @@ namespace Microcosm
         {
             Galaxy.Update(gameTime);
 
-            if (Microcosm.Input.IsKeyDown(Keys.Escape))
+            if (Microcosm.Keyboard.IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Microcosm.Input.IsKeyPress(Keys.F11))
+            if (Microcosm.Keyboard.IsKeyPress(Keys.F11))
             {
                 System.Diagnostics.Debug.WriteLine("F11 Press");
                 RenderManager.ToggleFullScreen();

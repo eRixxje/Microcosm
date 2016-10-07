@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Gametek.Monogame;
 using Gametek.Monogame.UI;
+using Gametek.Monogame.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Gametek.Monogame.Manager;
-using System.Linq;
+
 using Microcosm.Universe;
+using System.Diagnostics;
 
 namespace Microcosm.UI
 {
@@ -18,6 +20,14 @@ namespace Microcosm.UI
         List<Rectangle> gridlist;
 
         public GridCam Camera;
+
+        private Vector2 MousePosition
+        {
+            get
+            {
+                return GridCam.ScreenToWorld(Microcosm.Mouse.Position.ToVector2(), Camera.GetViewMatrix());
+            }
+        }
 
         private Texture2D hblock;
         private Texture2D vblock;
@@ -31,6 +41,25 @@ namespace Microcosm.UI
             Viewport = new Viewport((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
 
             Camera = new GridCam(Viewport);
+            Microcosm.Mouse.DoubleClicked += Mouse_DoubleClicked;
+            Microcosm.Mouse.Clicked += Mouse_Clicked;
+        }
+
+        private void Mouse_Clicked(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButton.RightButton)
+            {
+                Asteroid na = new Asteroid(GridCam.ScreenToWorld(Microcosm.Mouse.Position.ToVector2(), Camera.GetViewMatrix()), Asteroid.GetDirection(), Asteroid.GetSize());
+                na.LoadContent();
+                Microcosm.Galaxy.Asteroids.Add(na);
+            }
+
+            Debug.WriteLine("Clicked");
+        }
+        private void Mouse_DoubleClicked(object sender, MouseEventArgs e)
+        {
+            var a = Microcosm.Galaxy.Asteroids.GetAtPosition(MousePosition);
+            Debug.WriteLine("DoubleClicked {0}", a);
         }
 
         public void LoadContent()
@@ -44,51 +73,36 @@ namespace Microcosm.UI
         {
             BuildGrid();
 
-            Vector2 worldPosition = GridCam.ScreenToWorld(Microcosm.Input.MousePosition.ToVector2(), Camera.GetViewMatrix());
             for (int i = 0; i < Microcosm.Galaxy.Asteroids.Count; i++)
             {
-                // Selection
-                if (Microcosm.Galaxy.Asteroids[i].Bounds.Contains(worldPosition))
-                {
-                    if (Microcosm.Input.IsMouseClicked(MouseButton.LeftButton))
-                        Microcosm.Galaxy.Asteroids[i].IsSelected = true;
-                    else
-                        Microcosm.Galaxy.Asteroids[i].IsSelected = false;
-                }
+                // Mouse Hover
+                if (Microcosm.Galaxy.Asteroids[i].Bounds.Contains(MousePosition))
+                    Microcosm.Galaxy.Asteroids[i].IsHovered = true;
+                else
+                    Microcosm.Galaxy.Asteroids[i].IsHovered = false;
 
-                // Build RenderList
+                // Modify Visibility
                 Vector2 astPosition = GridCam.WorldToScreen(Microcosm.Galaxy.Asteroids[i].Position, Camera.GetViewMatrix());
                 if (Camera.ViewPort.Bounds.Contains(astPosition))
                     Microcosm.Galaxy.Asteroids[i].IsVisible = true;
                 else
                     Microcosm.Galaxy.Asteroids[i].IsVisible = false;
             }
-
-            if (Microcosm.Input.IsMouseClicked(MouseButton.RightButton))
-            {
-                Asteroid na = new Asteroid(GridCam.ScreenToWorld(Microcosm.Input.MousePosition.ToVector2(), Camera.GetViewMatrix()), Asteroid.GetDirection(), Asteroid.GetSize());
-                na.LoadContent();
-                Microcosm.Galaxy.Asteroids.Add(na);
-            }
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            // Grid
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
+
+            // Grid
             foreach (Rectangle rect in gridlist)
-            {
                 spriteBatch.Draw(Theme.GRID_LINE, rect, Color.White);
-                //spriteBatch.DrawString(AssetManager.ControlFont, string.Format("{0}", rect.X), rect.Location.ToVector2(), Color.White);
-            }
             
             // Galaxy
             foreach (var a in Microcosm.Galaxy.Asteroids.Where(a => a.IsVisible))
-            {
                 a.Draw(gameTime, spriteBatch);
-            }
+            
             spriteBatch.End();
 
-            // Control Decorations
             spriteBatch.Begin();
             
             // Map Borders

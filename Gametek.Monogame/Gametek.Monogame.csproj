@@ -48,9 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Geometry.cs" />
+    <Compile Include="Input\InputEnums.cs" />
+    <Compile Include="Input\MouseEventArgs.cs" />
+    <Compile Include="Input\MouseListener.cs" />
     <Compile Include="Manager\AssetManager.cs" />
     <Compile Include="GameBase.cs" />
-    <Compile Include="Manager\InputManager.cs" />
+    <Compile Include="Input\KeyBoardListener.cs" />
     <Compile Include="Primitives\Circle.cs" />
     <Compile Include="SpriteBatchExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
