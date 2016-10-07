@@ -31,8 +31,8 @@ namespace Gametek.Monogame.UI
 
         public void Update(GameTime gameTime)
         {
-            cursorDest.X = InputManager.MousePosition.X;
-            cursorDest.Y = InputManager.MousePosition.Y;
+            cursorDest.X = GameBase.Input.MousePosition.X;
+            cursorDest.Y = GameBase.Input.MousePosition.Y;
 
             // Set Cursor Rect.
             //if (InputManager.IsMouseDown(MouseButton.RightButton))

@@ -4,7 +4,7 @@ using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Microcosm
+namespace Microcosm.UI
 {
     public class Theme
     {

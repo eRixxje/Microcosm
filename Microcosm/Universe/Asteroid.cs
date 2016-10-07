@@ -1,11 +1,11 @@
-﻿using Gametek.Monogame;
-using Gametek.Monogame.Primitives;
+﻿using Gametek.Monogame.Primitives;
 using Gametek.Monogame.UI;
 using Gametek.Monogame.Util;
+using Microcosm.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Microcosm
+namespace Microcosm.Universe
 {
     public sealed class Asteroid : UIElement
     {
@@ -23,11 +23,7 @@ namespace Microcosm
 
         private AsteroidIndicator indicator;
 
-        public bool IsCollided
-        {
-            get;
-            private set;
-        }
+        public bool IsCollided { get; set; }
 
         public Asteroid(Vector2 position, Vector2 direction, int asteroidSize)
         {
@@ -44,6 +40,10 @@ namespace Microcosm
 
             indicator = new AsteroidIndicator(this);
         }
+        public void UnloadContent()
+        {
+
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -53,7 +53,9 @@ namespace Microcosm
             indicator.Update(gameTime);
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {           
+        {
+            base.Draw(gameTime, spriteBatch);
+
             if (IsSelected)
                 spriteBatch.Draw(Texture, Position, Theme.BLUE_MEDIUM);
             else
@@ -61,13 +63,6 @@ namespace Microcosm
 
             //spriteBatch.DrawCircle(Bounds, 12, Color.Red);
             indicator.Draw(gameTime, spriteBatch);
-
-            base.Draw(gameTime, spriteBatch);
-        }
-
-        public void SetCollided(bool Value)
-        {
-            IsCollided = Value;
         }
 
 

@@ -1,10 +1,11 @@
 ﻿using Gametek.Monogame;
 using Gametek.Monogame.Manager;
 using Gametek.Monogame.UI;
+using Microcosm.Universe;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Microcosm
+namespace Microcosm.UI
 {
     public class AsteroidIndicator : UIElement
     {

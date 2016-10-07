@@ -27,18 +27,14 @@ namespace Gametek.Monogame.UI
             }
         }
 
-        public void SetSelected(bool Value)
-        {
-            IsSelected = Value;
-        }
-
         public virtual void Update(GameTime gameTime)
         {
 
         }
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
+            //if (!IsVisible)
+            //    return;
         }
     }
 }

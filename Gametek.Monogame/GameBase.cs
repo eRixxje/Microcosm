@@ -8,6 +8,8 @@ namespace Gametek.Monogame
     {
         private GraphicsDeviceManager _graphicsDeviceManager;
 
+        public static InputManager Input { get; private set; }
+
         public GameBase(int Width, int Height, bool FullScreen)
         {
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
@@ -27,6 +29,8 @@ namespace Gametek.Monogame
 
         protected override void Initialize()
         {
+            Input = new InputManager();
+
             RenderManager.Initialize(_graphicsDeviceManager);
             AssetManager.Initialize(Content);
 
@@ -44,7 +48,7 @@ namespace Gametek.Monogame
         protected override void Update(GameTime gameTime)
         {
             RenderManager.Update(gameTime);
-            InputManager.Update(gameTime);
+            Input.Update(gameTime);
 
             base.Update(gameTime);
         }

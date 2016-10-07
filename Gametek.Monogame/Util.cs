@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Linq;
 
 namespace Gametek.Monogame.Util
@@ -27,6 +28,11 @@ namespace Gametek.Monogame.Util
         public static float NextSigned(float Max)
         {
             return Signed() * Next(Max);
+        }
+
+        public static Vector2 NextVector2(float Max)
+        {
+            return new Vector2(Rand.Next(Max), Rand.Next(Max));
         }
 
         public static int Signed()

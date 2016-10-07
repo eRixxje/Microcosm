@@ -70,16 +70,6 @@ namespace Microcosm
             ClampZoom(Zoom + deltaZoom);
         }
 
-        //public void ZoomIn(float deltaZoom)
-        //{
-        //    ClampZoom(Zoom + deltaZoom);
-        //}
-
-        //public void ZoomOut(float deltaZoom)
-        //{
-        //    ClampZoom(Zoom - deltaZoom);
-        //}
-
         private void ClampZoom(float value)
         {
             if (value < MinimumZoom)
@@ -91,13 +81,13 @@ namespace Microcosm
 
         }
 
-        public Vector2 WorldToScreen(Vector2 worldPosition)
+        public static Vector2 WorldToScreen(Vector2 worldPosition, Matrix viewMatrix)
         {
-            return Vector2.Transform(worldPosition, GetViewMatrix());
+            return Vector2.Transform(worldPosition, viewMatrix);
         }
-        public Vector2 ScreenToWorld(Vector2 screenPosition)
+        public static Vector2 ScreenToWorld(Vector2 screenPosition, Matrix viewMatrix)
         {
-            return Vector2.Transform(screenPosition, Matrix.Invert(GetViewMatrix()));
+            return Vector2.Transform(screenPosition, Matrix.Invert(viewMatrix));
         }
 
         public Matrix GetViewMatrix()

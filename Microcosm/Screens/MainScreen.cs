@@ -35,7 +35,7 @@ namespace Microcosm.Screens
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(_background, new Rectangle(0, 0, 1280, 720), Color.White);
+            spriteBatch.Draw(_background, new Rectangle(0, 0, 1920, 1280), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -43,7 +43,7 @@ namespace Microcosm.Screens
 
         public override void HandleInput()
         {
-            if (InputManager.IsKeyPress(Microsoft.Xna.Framework.Input.Keys.S))
+            if (Microcosm.Input.IsKeyPress(Microsoft.Xna.Framework.Input.Keys.D1))
                 StartGame();
         }
         public override void SetupControls()
@@ -58,7 +58,7 @@ namespace Microcosm.Screens
         private void StartGame()
         {
             // Create a Galaxy and wait for it to be done.
-            Galaxy.Initialize();
+            Microcosm.Galaxy.Initialize();
 
             // Switch to Galaxy Screen
             RenderManager.Switch(Name, "GalaxyScreen");

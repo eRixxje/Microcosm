@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Geometry.cs" />
-    <Compile Include="Manager\ContentManager.cs" />
+    <Compile Include="Manager\AssetManager.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="Manager\InputManager.cs" />
     <Compile Include="Primitives\Circle.cs" />

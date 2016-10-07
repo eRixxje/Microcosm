@@ -11,7 +11,6 @@ namespace Gametek.Monogame.Manager
         ExtraButton1,
         ExtraButton2
     }
-
     public enum ScrollDirection
     {
         None,
@@ -19,34 +18,34 @@ namespace Gametek.Monogame.Manager
         ZoomOut
     }
 
-    public static class InputManager
+    public class InputManager
     {
-        private static MouseState cMouse, pMouse;
-        private static KeyboardState cKey, pKey;
+        private MouseState cMouse, pMouse;
+        private KeyboardState cKey, pKey;
 
-        private static double ClickTimer;
+        private double ClickTimer;
         private const double TimerDelay = 500;
-        private static bool _doubleClicked;
+        private bool _doubleClicked;
 
-        public static ScrollDirection MouseZoom
+        public ScrollDirection MouseZoom
         {
             get
             {
                 if (cMouse.ScrollWheelValue < pMouse.ScrollWheelValue)
-                    return ScrollDirection.ZoomIn;
-                if (cMouse.ScrollWheelValue > pMouse.ScrollWheelValue)
                     return ScrollDirection.ZoomOut;
+                if (cMouse.ScrollWheelValue > pMouse.ScrollWheelValue)
+                    return ScrollDirection.ZoomIn;
 
                 return ScrollDirection.None;
             }
         }
 
-        public static Point MousePosition
+        public Point MousePosition
         {
             get { return cMouse.Position; }
         }
 
-        public static void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             pMouse = cMouse;
             cMouse = Mouse.GetState();
@@ -72,18 +71,18 @@ namespace Gametek.Monogame.Manager
             System.Diagnostics.Debug.WriteLine("{0}", _doubleClicked);
         }
 
-        public static bool IsKeyDown(Keys key)
+        public bool IsKeyDown(Keys key)
         {
             return cKey.IsKeyDown(key) && pKey.IsKeyDown(key);
         }
-        public static bool IsKeyPress(Keys key)
+        public bool IsKeyPress(Keys key)
         {
             //System.Diagnostics.Debug.WriteLine("{0}", cKey.IsKeyDown(Keys.F11) && pKey.IsKeyUp(Keys.F11));
 
             return cKey.IsKeyDown(key) && !pKey.IsKeyDown(key);
         }
 
-        public static bool IsMouseDown(MouseButton Button)
+        public bool IsMouseDown(MouseButton Button)
         {
             switch (Button)
             {
@@ -102,7 +101,7 @@ namespace Gametek.Monogame.Manager
             }
         }
 
-        public static bool IsMouseClicked(MouseButton Button)
+        public bool IsMouseClicked(MouseButton Button)
         {
             switch (Button)
             {
@@ -121,7 +120,7 @@ namespace Gametek.Monogame.Manager
             }
         }
 
-        public static bool IsMouseDoubleClicked(MouseButton Button)
+        public bool IsMouseDoubleClicked(MouseButton Button)
         {
             switch (Button)
             {

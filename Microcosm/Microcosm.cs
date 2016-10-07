@@ -2,6 +2,8 @@
 using Gametek.Monogame.Manager;
 using Gametek.Monogame.UI;
 using Microcosm.Screens;
+using Microcosm.UI;
+using Microcosm.Universe;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,11 +12,14 @@ namespace Microcosm
 {
     public class Microcosm : GameBase
     {
-        Cursor cursor;
+        private Cursor cursor;
 
-        public Microcosm() : base(1280, 720, false)
+        public static Galaxy Galaxy { get; private set; }
+
+        public Microcosm() : base(1920, 1280, false)
         {
             cursor = new Cursor();
+            Galaxy = new Galaxy();
         }
 
         /// <summary>
@@ -62,10 +67,10 @@ namespace Microcosm
         {
             Galaxy.Update(gameTime);
 
-            if (InputManager.IsKeyDown(Keys.Escape))
+            if (Microcosm.Input.IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (InputManager.IsKeyPress(Keys.F11))
+            if (Microcosm.Input.IsKeyPress(Keys.F11))
             {
                 System.Diagnostics.Debug.WriteLine("F11 Press");
                 RenderManager.ToggleFullScreen();

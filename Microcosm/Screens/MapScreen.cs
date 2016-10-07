@@ -1,5 +1,6 @@
 ﻿using Gametek.Monogame;
 using Gametek.Monogame.Manager;
+using Microcosm.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -43,7 +44,7 @@ namespace Microcosm.Screens
             grid.Draw(gameTime, spriteBatch);
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(AssetManager.ControlFont, string.Format("Mouse: {0}, {1}", InputManager.MousePosition.X, InputManager.MousePosition.Y), new Vector2(10, 10), Color.White, Color.Black);
+            spriteBatch.DrawString(AssetManager.ControlFont, string.Format("Mouse: {0}, {1}", Microcosm.Input.MousePosition.X, Microcosm.Input.MousePosition.Y), new Vector2(10, 10), Color.White, Color.Black);
             spriteBatch.DrawString(AssetManager.ControlFont, string.Format("{0}", grid.Camera.Position), new Vector2(10, 20), Color.White, Color.Black);            
             spriteBatch.End();
 
@@ -52,21 +53,21 @@ namespace Microcosm.Screens
 
         public override void HandleInput()
         {
-            if (InputManager.IsKeyDown(Keys.W))
+            if (Microcosm.Input.IsKeyDown(Keys.W))
                 grid.Move(new Vector2(0, -250) * deltaTime);
 
-            if (InputManager.IsKeyDown(Keys.S))
+            if (Microcosm.Input.IsKeyDown(Keys.S))
                 grid.Move(new Vector2(0, 250) * deltaTime);
 
-            if (InputManager.IsKeyDown(Keys.A))
+            if (Microcosm.Input.IsKeyDown(Keys.A))
                 grid.Move(new Vector2(-250, 0) * deltaTime);
 
-            if (InputManager.IsKeyDown(Keys.D))
+            if (Microcosm.Input.IsKeyDown(Keys.D))
                 grid.Move(new Vector2(250, 0) * deltaTime);
 
-            if (InputManager.MouseZoom == ScrollDirection.ZoomIn)
+            if (Microcosm.Input.MouseZoom == ScrollDirection.ZoomOut)
                 grid.Zoom(-0.2f);
-            if (InputManager.MouseZoom == ScrollDirection.ZoomOut)
+            if (Microcosm.Input.MouseZoom == ScrollDirection.ZoomIn)
                 grid.Zoom(0.2f);
         }
         public override void SetupControls()

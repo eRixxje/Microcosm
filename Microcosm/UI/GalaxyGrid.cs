@@ -5,13 +5,13 @@ using Gametek.Monogame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Gametek.Monogame.Manager;
+using System.Linq;
+using Microcosm.Universe;
 
-namespace Microcosm
+namespace Microcosm.UI
 {
     public sealed class GalaxyGrid : UIElement
     {
-        public static List<Asteroid> render = new List<Asteroid>();
-
         public int CellSize { get; private set; }
         public Viewport Viewport { get; private set; }
 
@@ -44,33 +44,31 @@ namespace Microcosm
         {
             BuildGrid();
 
-            render = new List<Asteroid>();
-
-            Vector2 worldPosition = Camera.ScreenToWorld(InputManager.MousePosition.ToVector2());
-            for (int i = 0; i < Galaxy.asteroids.Count; i++)
+            Vector2 worldPosition = GridCam.ScreenToWorld(Microcosm.Input.MousePosition.ToVector2(), Camera.GetViewMatrix());
+            for (int i = 0; i < Microcosm.Galaxy.Asteroids.Count; i++)
             {
                 // Selection
-                if (Galaxy.asteroids[i].Bounds.Contains(worldPosition))
+                if (Microcosm.Galaxy.Asteroids[i].Bounds.Contains(worldPosition))
                 {
-                    if (InputManager.IsMouseDoubleClicked(MouseButton.LeftButton))
-                        Galaxy.asteroids[i].SetSelected(true);
+                    if (Microcosm.Input.IsMouseClicked(MouseButton.LeftButton))
+                        Microcosm.Galaxy.Asteroids[i].IsSelected = true;
                     else
-                        Galaxy.asteroids[i].SetSelected(false);
+                        Microcosm.Galaxy.Asteroids[i].IsSelected = false;
                 }
 
-                // Renderlist
-                Vector2 astPosition = Camera.WorldToScreen(Galaxy.asteroids[i].Position);
+                // Build RenderList
+                Vector2 astPosition = GridCam.WorldToScreen(Microcosm.Galaxy.Asteroids[i].Position, Camera.GetViewMatrix());
                 if (Camera.ViewPort.Bounds.Contains(astPosition))
-                {
-                    render.Add(Galaxy.asteroids[i]);
-                }
+                    Microcosm.Galaxy.Asteroids[i].IsVisible = true;
+                else
+                    Microcosm.Galaxy.Asteroids[i].IsVisible = false;
             }
 
-            if (InputManager.IsMouseClicked(MouseButton.RightButton))
+            if (Microcosm.Input.IsMouseClicked(MouseButton.RightButton))
             {
-                Asteroid na = new Asteroid(Camera.ScreenToWorld(InputManager.MousePosition.ToVector2()), Asteroid.GetDirection(), Asteroid.GetSize());
+                Asteroid na = new Asteroid(GridCam.ScreenToWorld(Microcosm.Input.MousePosition.ToVector2(), Camera.GetViewMatrix()), Asteroid.GetDirection(), Asteroid.GetSize());
                 na.LoadContent();
-                Galaxy.asteroids.Add(na);
+                Microcosm.Galaxy.Asteroids.Add(na);
             }
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -84,7 +82,7 @@ namespace Microcosm
             }
             
             // Galaxy
-            foreach (var a in render)
+            foreach (var a in Microcosm.Galaxy.Asteroids.Where(a => a.IsVisible))
             {
                 a.Draw(gameTime, spriteBatch);
             }

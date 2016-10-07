@@ -39,10 +39,11 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Asteroid.cs" />
-    <Compile Include="AsteroidIndicator.cs" />
-    <Compile Include="Galaxy.cs" />
-    <Compile Include="GalaxyGrid.cs" />
+    <Compile Include="Universe\Asteroid.cs" />
+    <Compile Include="UI\AsteroidIndicator.cs" />
+    <Compile Include="Universe\AsteroidList.cs" />
+    <Compile Include="Universe\Galaxy.cs" />
+    <Compile Include="UI\GalaxyGrid.cs" />
     <Compile Include="GridCam.cs" />
     <Compile Include="Microcosm.cs" />
     <Compile Include="Program.cs" />
@@ -50,7 +51,7 @@
     <Compile Include="Screens\AstScreen.cs" />
     <Compile Include="Screens\MainScreen.cs" />
     <Compile Include="Screens\MapScreen.cs" />
-    <Compile Include="Theme.cs" />
+    <Compile Include="UI\Theme.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL">
