@@ -22,7 +22,7 @@ namespace Microcosm.Screens
 
         private cube Cube;
 
-        public MapScreen(bool IsActive) : base(IsActive)
+        public MapScreen(bool IsActive = false) : base(IsActive)
         {
             camera = new Camera(new Vector3(20, 22, 20), new Vector3(3, 0, 3));
         }
@@ -46,12 +46,12 @@ namespace Microcosm.Screens
             //rasterizerState.CullMode = CullMode.None;
             //ScreenManager.GraphicsDevice.RasterizerState = rasterizerState;
 
-            map = new Tilemap(900, 900, .25f, 112334);
+            map = new Tilemap(50, 50, 1f, 8873451);
 
             mapVertexBuffer = new VertexBuffer(ScreenManager.GraphicsDevice, 
                 VertexPositionColorNormal.vertexDeclaration, map.vertices.Length, BufferUsage.WriteOnly);
             mapIndexBuffer = new IndexBuffer(ScreenManager.GraphicsDevice,
-                typeof(int), map.indices.Length, BufferUsage.WriteOnly);
+                IndexElementSize.ThirtyTwoBits, map.indices.Length, BufferUsage.WriteOnly);
 
             Cube = new cube();
         }

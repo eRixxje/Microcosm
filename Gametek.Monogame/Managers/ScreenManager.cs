@@ -39,7 +39,7 @@ namespace Gametek.Monogame.Managers
 
             graphics = new GraphicsDeviceManager(Game)
             {
-                IsFullScreen = false,
+                IsFullScreen = FullScreen,
                 PreferredBackBufferWidth = startupWidth,
                 PreferredBackBufferHeight = startupHeight
             };

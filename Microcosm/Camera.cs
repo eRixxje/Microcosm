@@ -57,8 +57,8 @@ namespace Microcosm
         private const float zoomSpeed = .6f;
         private const float rotationSpeed = .01f;
 
-        private const float minZoom = 5f;
-        private const float maxZoom = 30f;
+        private const float minZoom = 1f;
+        private const float maxZoom = 120f;
         
         private bool drawAxes;
 
@@ -68,7 +68,7 @@ namespace Microcosm
             this.Target    = Target;
 
             view = Matrix.CreateLookAt(Position, Target, Vector3.Up);
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, ScreenManager.GraphicsDevice.Viewport.AspectRatio, .1f, 100f);
+            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, ScreenManager.GraphicsDevice.Viewport.AspectRatio, .1f, 1000f);
         }
 
         public void Initialize()

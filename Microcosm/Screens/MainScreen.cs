@@ -15,7 +15,7 @@ namespace Microcosm.Screens
 
         public override void LoadContent()
         {
-            b = new Button("Dit is een test", Color.Gray, 30, 30, 300, 100);
+            b = new Button("Dit is een test", Color.Gray, 30, 30, 100, 50);
         }
 
         public override void UnloadContent()

@@ -16,12 +16,14 @@
 #begin thefont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:thefont.spritefont
 
 #begin Fonts/ControlFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/ControlFont.spritefont
 
@@ -37,8 +39,8 @@
 /processorParam:TextureFormat=Color
 /build:Cursors/cursors.png
 
-#begin Models/cube.obj
-/importer:OpenAssetImporter
+#begin Models/cube.fbx
+/importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
@@ -53,6 +55,6 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=DxtCompressed
-/build:Models/cube.obj
+/processorParam:TextureFormat=Compressed
+/build:Models/cube.fbx
 

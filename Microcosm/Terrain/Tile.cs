@@ -22,7 +22,7 @@ namespace Microcosm
         }
 
         public VertexPositionColorNormal[] Vertices = new VertexPositionColorNormal[4];
-        public int[] Indices = new int[6];
+        public short[] Indices = new short[6];
 
         public Tile(Vector3 Position, float Size, double Value)
         {
