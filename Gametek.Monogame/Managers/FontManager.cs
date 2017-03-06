@@ -2,10 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace Gametek.Monogame.Managers
+namespace Gametek.Monogame.Screen
 {
     public static class FontManager
     {
+        private static ContentManager contentmanager;
+
         public static Dictionary<string, SpriteFont> fontlist = new Dictionary<string, SpriteFont>();
 
         public static SpriteFont ControlFont
@@ -13,10 +15,20 @@ namespace Gametek.Monogame.Managers
             get { return fontlist["ControlFont"]; }
         }
 
-        public static void LoadContent(ContentManager ContentManager)
+        public static void Initialize(ContentManager ContentManager)
         {
+            System.Diagnostics.Debug.WriteLine("FontManager::Initialize::Start");
+            contentmanager = ContentManager;
+            LoadContent();
+            System.Diagnostics.Debug.WriteLine("FontManager::Initialize::Done");
+        }
+
+        public static void LoadContent()
+        {
+            System.Diagnostics.Debug.WriteLine("FontManager::LoadContent::Start");
             // Fallback font
-            fontlist.Add("ControlFont", ContentManager.Load<SpriteFont>("Fonts\\ControlFont"));
+            fontlist.Add("ControlFont", contentmanager.Load<SpriteFont>("Fonts\\ControlFont"));
+            System.Diagnostics.Debug.WriteLine("FontManager::LoadContent::Done");
         }
 
         public static void Add(string key, SpriteFont Value)

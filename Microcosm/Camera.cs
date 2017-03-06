@@ -1,9 +1,7 @@
-﻿using Gametek.Monogame.Helper;
-using Gametek.Monogame.Managers;
+﻿using Gametek.Monogame;
 using Gametek.Monogame.UI.Helper;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Microcosm
 {
@@ -23,8 +21,6 @@ namespace Microcosm
 
     public sealed class Camera
     {
-        private Axes axes = new Axes();
-
         public Matrix view { get; private set; }
         public Matrix projection { get; private set; }
 
@@ -59,8 +55,6 @@ namespace Microcosm
 
         private const float minZoom = 1f;
         private const float maxZoom = 120f;
-        
-        private bool drawAxes;
 
         public Camera(Vector3 Position, Vector3 Target)
         {
@@ -68,70 +62,30 @@ namespace Microcosm
             this.Target    = Target;
 
             view = Matrix.CreateLookAt(Position, Target, Vector3.Up);
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, ScreenManager.GraphicsDevice.Viewport.AspectRatio, .1f, 1000f);
+            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GameEngine.GraphicsDeviceManager.GraphicsDevice.Viewport.AspectRatio, .1f, 1000f);
         }
 
         public void Initialize()
         {
             // Set mouse position and do initial get state
-            Mouse.SetPosition(ScreenManager.game.Window.ClientBounds.Width / 2, ScreenManager.game.Window.ClientBounds.Height / 2);
-        }
-
-        public void LoadContent()
-        {
-            axes.LoadContent();
+            //Mouse.SetPosition(GameEngine.Window.ClientBounds.Width / 2, GameEngine.Window.ClientBounds.Height / 2);        
         }
 
         public void Update(GameTime gameTime)
         {
-            if (InputManager.IsKeyPress(Keys.F2))
-                drawAxes = !drawAxes;
-
-            // Keyboard input
-            if (InputManager.IsKeyDown(Keys.W) && InputManager.IsKeyDown(Keys.LeftShift))
-                Move(Movement.Up);
-            if (InputManager.IsKeyDown(Keys.W) && !InputManager.IsKeyDown(Keys.LeftShift))
-                Move(Movement.Forward);
-            if (InputManager.IsKeyDown(Keys.S) && InputManager.IsKeyDown(Keys.LeftShift))
-                Move(Movement.Down);
-            if (InputManager.IsKeyDown(Keys.S) && !InputManager.IsKeyDown(Keys.LeftShift))
-                Move(Movement.Back);
-            if (InputManager.IsKeyDown(Keys.A))
-                Move(Movement.Left);
-            if (InputManager.IsKeyDown(Keys.D))
-                Move(Movement.Right);
-            if (InputManager.IsKeyDown(Keys.Z))
-                Move(Movement.ArcLeft);
-            if (InputManager.IsKeyDown(Keys.X))
-                Move(Movement.ArcRight);
-            if (InputManager.MouseZoom == ScrollDirection.ZoomIn && Position.Y < maxZoom)
-                Move(Movement.ZoomIn);
-            if (InputManager.MouseZoom == ScrollDirection.ZoomOut && Position.Y > minZoom)
-                Move(Movement.ZoomOut);
-
-            // Drag
-            if (InputManager.IsMouseDown(MouseButton.RightButton))
-            {
-                Position -= InputManager.GetMouseDragDelta(projection, view);
-                Target -= InputManager.GetMouseDragDelta(projection, view);
-            }
-
             // Update View
             view = Matrix.CreateLookAt(Position, Target, Vector3.Up);
         }
         
-        public void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if(drawAxes)
-                axes.Draw(gameTime, view, projection);
-
             Texture2D pixel = GeometryHelper.GetRectangle(new Vector2(1, 1), Color.Red);
 
-            // Find screen equivalent of 3D location in world
-            Vector3 screenLocation = ScreenManager.GraphicsDevice.Viewport.Project(Target, projection, view, Matrix.Identity);
+            //Find screen equivalent of 3D location in world
+            Vector3 screenLocation = GameEngine.GraphicsDeviceManager.GraphicsDevice.Viewport.Project(Target, projection, view, Matrix.Identity);
 
-            // Draw our pixel texture there
-            ScreenManager.spriteBatch.Draw(pixel, new Vector2(screenLocation.X, screenLocation.Y), Color.Red);
+            //Draw our pixel texture there
+            spriteBatch.Draw(pixel, new Vector2(screenLocation.X, screenLocation.Y), Color.Red);
         }
 
         public void Move(Movement CameraMovement)

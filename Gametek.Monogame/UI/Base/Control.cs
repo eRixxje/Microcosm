@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Gametek.Monogame.UI.Base
 {
@@ -17,6 +18,6 @@ namespace Gametek.Monogame.UI.Base
         }
 
         //public abstract void LoadContent(GraphicsDevice graphics);
-        public abstract void Draw(GameTime gameTime);
+        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Gametek.Monogame.UI.Helper;
+using Gametek.Monogame.Screen;
 using Gametek.Monogame.Managers;
 
 namespace Gametek.Monogame.UI.Controls
@@ -39,14 +40,14 @@ namespace Gametek.Monogame.UI.Controls
             backRectangle = GeometryHelper.GetRectangle(Size, backColor);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!IsVisible) { return; }
             
-            ScreenManager.spriteBatch.Draw(backRectangle, Location, Color.White);
+            spriteBatch.Draw(backRectangle, Location, Color.White);
 
             if (!string.IsNullOrEmpty(Text))
-                ScreenManager.spriteBatch.DrawString(FontManager.ControlFont, Text, Location + TextLocation, Color.Black);
+                spriteBatch.DrawString(FontManager.ControlFont, Text, Location + TextLocation, Color.Black);
         }
     }
 }

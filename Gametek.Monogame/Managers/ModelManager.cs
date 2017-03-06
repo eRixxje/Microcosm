@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gametek.Monogame.Managers
 {
@@ -14,12 +10,9 @@ namespace Gametek.Monogame.Managers
 
         public static Dictionary<string, Model> modellist = new Dictionary<string, Model>();
                 
-        public static void LoadContent(ContentManager ContentManager)
+        public static void Initialize(ContentManager ContentManager)
         {
             contentmanager = ContentManager;
-
-            // Fallback font
-            //fontlist.Add("ControlFont", ContentManager.Load<SpriteFont>("Fonts\\ControlFont"));
         }
 
         public static void Add(string key)

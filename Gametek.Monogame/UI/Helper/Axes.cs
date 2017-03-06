@@ -1,5 +1,4 @@
-﻿using Gametek.Monogame.Managers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Gametek.Monogame.Helper
@@ -30,7 +29,7 @@ namespace Gametek.Monogame.Helper
 
         public void LoadContent()
         {
-            basicEffect = new BasicEffect(ScreenManager.GraphicsDevice);
+            basicEffect = new BasicEffect(GameEngine.GraphicsDeviceManager.GraphicsDevice);
 
             SetLineVerticles();
         }
@@ -45,7 +44,7 @@ namespace Gametek.Monogame.Helper
             foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, lines, 0, 3);
+                GameEngine.GraphicsDeviceManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, lines, 0, 3);
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using Gametek.Monogame.Managers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Gametek.Monogame.UI.Helper
@@ -8,7 +7,7 @@ namespace Gametek.Monogame.UI.Helper
     {
         public static Texture2D GetRectangle(Vector2 size, Color BackgroundColor)
         {
-            Texture2D rect = new Texture2D(ScreenManager.GraphicsDevice, (int)size.X, (int)size.Y);
+            Texture2D rect = new Texture2D(GameEngine.GraphicsDeviceManager.GraphicsDevice, (int)size.X, (int)size.Y);
             Color[] data = new Color[(int)size.X * (int)size.Y];
 
             for (int i = 0; i < data.Length; ++i) data[i] = BackgroundColor;
@@ -17,14 +16,14 @@ namespace Gametek.Monogame.UI.Helper
             return rect;
         }
 
-        public static Vector3 WorldPosition(Point MouseLocation, Matrix projection, Matrix view)
-        {
-            Vector3 nearPoint = ScreenManager.Viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 0.0f), projection, view, Matrix.Identity);
-            Vector3 farPoint = ScreenManager.Viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 1.0f), projection, view, Matrix.Identity);
-            Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
+        //public static Vector3 WorldPosition(Point MouseLocation, Matrix projection, Matrix view)
+        //{
+        //    Vector3 nearPoint = ScreenManager.Viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 0.0f), projection, view, Matrix.Identity);
+        //    Vector3 farPoint = ScreenManager.Viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 1.0f), projection, view, Matrix.Identity);
+        //    Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
 
-            return (nearPoint - direction * (nearPoint.Y / direction.Y));
-        }
+        //    return (nearPoint - direction * (nearPoint.Y / direction.Y));
+        //}
 
         //public static Vector3 SelectedVector3(Point mouseLocation, Matrix projection, Matrix view)
         //{
