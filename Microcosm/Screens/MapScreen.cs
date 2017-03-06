@@ -35,21 +35,30 @@ namespace Microcosm.Screens
             KeyListener.KeyTyped += KeyListener_KeyTyped;
 
             MouseListener.MouseDrag += MouseListener_MouseDrag;
+            MouseListener.MouseWheelMoved += MouseListener_MouseWheelMoved;
+        }
+
+        private void MouseListener_MouseWheelMoved(object sender, MouseEventArgs e)
+        {
+            //if (InputManager.MouseZoom == ScrollDirection.ZoomIn && Position.Y < maxZoom)
+            //    Move(Movement.ZoomIn);
+            //if (InputManager.MouseZoom == ScrollDirection.ZoomOut && Position.Y > minZoom)
+            //    Move(Movement.ZoomOut);
+
+            if (e.ScrollWheelDelta != 0)
+            {
+                camera.Move(Movement.ZoomIn);
+            }
         }
 
         private void MouseListener_MouseDrag(object sender, MouseEventArgs e)
         {
             // Drag
-            if(e.Button == MouseButton.Right)
+            if(e.Button == MouseButton.Right && e.DistanceMoved != Vector2.Zero)
             {
                 //camera.Position -= InputManager.GetMouseDragDelta(projection, view);
                 //camera.Target -= InputManager.GetMouseDragDelta(projection, view);
             }
-
-            //if (InputManager.MouseZoom == ScrollDirection.ZoomIn && Position.Y < maxZoom)
-            //    Move(Movement.ZoomIn);
-            //if (InputManager.MouseZoom == ScrollDirection.ZoomOut && Position.Y > minZoom)
-            //    Move(Movement.ZoomOut);
         }
 
         private void KeyListener_KeyTyped(object sender, KeyboardEventArgs e)

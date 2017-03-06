@@ -65,7 +65,7 @@ namespace Gametek.Monogame.Input
 
                 KeyPressed?.Invoke(null, args);
 
-                if (args.Character.HasValue)
+                //if (args.Character.HasValue)
                     KeyTyped?.Invoke(null, args);
 
                 _lastPressTime = gameTime.TotalGameTime;
