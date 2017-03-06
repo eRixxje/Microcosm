@@ -38,9 +38,9 @@ namespace Microcosm.Screens
         private void MouseListener_MouseWheelMoved(object sender, MouseEventArgs e)
         {
             if (e.ScrollWheelDelta > 0)
-                camera.Zoom(Movement.Up);
+                camera.Zoom(CameraZoom.Out);
             else
-                camera.Zoom(Movement.Down);
+                camera.Zoom(CameraZoom.In);
         }
         private void MouseListener_MouseDrag(object sender, MouseEventArgs e)
         {
@@ -50,10 +50,10 @@ namespace Microcosm.Screens
             if(e.Button == MouseButton.Middle)
             {
                 if (e.DistanceMoved.X > 0) // || e.DistanceMoved.Y > 0)
-                    camera.Arc(Movement.Right);
+                    camera.Arc(CameraMovement.Right);
                 
                 if(e.DistanceMoved.X < 0) // || e.DistanceMoved.Y < 0)
-                    camera.Arc(Movement.Left);
+                    camera.Arc(CameraMovement.Left);
             }
         }
 

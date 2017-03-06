@@ -6,14 +6,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Microcosm
 {
-    public enum Movement
+    public enum CameraMovement
     {
         Left,
         Right,
-        Forward,
-        Back,
         Up,
         Down,
+    }
+    public enum CameraZoom
+    {
+        In,
+        Out
     }
 
     public sealed class Camera
@@ -104,7 +107,6 @@ namespace Microcosm
                 _isDirty = false;
             }
         }
-        
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Texture2D pixel = GeometryHelper.GetRectangle(new Vector2(1, 1), Color.Red);
@@ -116,59 +118,57 @@ namespace Microcosm
             spriteBatch.Draw(pixel, new Vector2(screenLocation.X, screenLocation.Y), Color.Red);
         }
 
-        public void Move(Movement CameraMovement)
-        {
-            Vector3 fwd = camWorld.Forward;
-            fwd.Y = 0;
+        //public void Move(CameraMovement CameraMovement)
+        //{
+        //    Vector3 fwd = camWorld.Forward;
+        //    fwd.Y = 0;
 
-            switch (CameraMovement)
-            {
-                case Movement.Up:
-                    Position += camWorld.Down;
-                    break;
-                case Movement.Down:
-                    Position -= camWorld.Down;
-                    break;
-                case Movement.Left:
-                    Position += camWorld.Left * panSpeed;
-                    Target += camWorld.Left * panSpeed;
-                    break;
-                case Movement.Right:
-                    Position -= camWorld.Left * panSpeed;
-                    Target -= camWorld.Left * panSpeed;
-                    break;
-                case Movement.Forward:
-                    Position += fwd * panSpeed;
-                    Target += fwd * panSpeed;
-                    break;
-                case Movement.Back:
-                    Position -= fwd * panSpeed;
-                    Target -= fwd * panSpeed;
-                    break;
-                
-                
-            }
-        }
-        public void Arc(Movement cameraMovement)
+        //    switch (CameraMovement)
+        //    {
+        //        case CameraMovement.Up:
+        //            Position += camWorld.Down;
+        //            break;
+        //        case CameraMovement.Down:
+        //            Position -= camWorld.Down;
+        //            break;
+        //        case CameraMovement.Left:
+        //            Position += camWorld.Left * panSpeed;
+        //            Target += camWorld.Left * panSpeed;
+        //            break;
+        //        case CameraMovement.Right:
+        //            Position -= camWorld.Left * panSpeed;
+        //            Target -= camWorld.Left * panSpeed;
+        //            break;
+        //        case Movement.Forward:
+        //            Position += fwd * panSpeed;
+        //            Target += fwd * panSpeed;
+        //            break;
+        //        case Movement.Back:
+        //            Position -= fwd * panSpeed;
+        //            Target -= fwd * panSpeed;
+        //            break;
+        //    }
+        //}
+        public void Arc(CameraMovement cameraMovement)
         {
             switch(cameraMovement)
             {
-                case Movement.Left:
+                case CameraMovement.Left:
                     Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), rotationSpeed)) + Target;
                     break;
-                case Movement.Right:
+                case CameraMovement.Right:
                     Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), -rotationSpeed)) + Target;
                     break;
             }
         }
-        public void Zoom(Movement cameraMovement)
+        public void Zoom(CameraZoom cameraZoom)
         {
-            switch(cameraMovement)
+            switch(cameraZoom)
             {
-                case Movement.Down:
+                case CameraZoom.In:
                     Position += camWorld.Backward * zoomSpeed;
                     break;
-                case Movement.Up:
+                case CameraZoom.Out:
                     Position += camWorld.Forward * zoomSpeed;
                     break;
             }
@@ -176,7 +176,7 @@ namespace Microcosm
         public void Drag(Point CurrentPosition, Point PreviousPosition)
         {
             Position -= WorldPosition(CurrentPosition) - WorldPosition(PreviousPosition);
-            Target -= WorldPosition(CurrentPosition) - WorldPosition(PreviousPosition);
+            Target   -= WorldPosition(CurrentPosition) - WorldPosition(PreviousPosition);
         }
 
         public Vector3 WorldPosition(Point MouseLocation)
