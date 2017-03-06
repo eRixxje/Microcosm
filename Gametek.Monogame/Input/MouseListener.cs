@@ -16,8 +16,8 @@ namespace Gametek.Monogame.Input
         private static bool _hasDoubleClicked;
         private static MouseEventArgs _mouseDownArgs;
         private static MouseEventArgs _previousClickArgs;
-        
 
+        public static Point Position;
         public static int DoubleClickMilliseconds = 500;
         public static int DragThreshold = 2;
 
@@ -124,6 +124,8 @@ namespace Gametek.Monogame.Input
         {
             _gameTime = gameTime;
             _currentState = Mouse.GetState();
+
+            Position = _currentState.Position;
 
             CheckButtonPressed(s => s.LeftButton, MouseButton.Left);
             CheckButtonPressed(s => s.MiddleButton, MouseButton.Middle);

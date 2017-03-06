@@ -53,7 +53,6 @@
     <Compile Include="Input\MouseButton.cs" />
     <Compile Include="Input\MouseEventArgs.cs" />
     <Compile Include="Input\MouseListener.cs" />
-    <Compile Include="Managers\InputManager.cs" />
     <Compile Include="Managers\ModelManager.cs" />
     <Compile Include="Math\NoiseGen.cs" />
     <Compile Include="MouseEvent.cs" />

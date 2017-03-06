@@ -2,6 +2,7 @@
 using Gametek.Monogame.UI.Helper;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Microcosm
 {
@@ -13,14 +14,12 @@ namespace Microcosm
         Back,
         Up,
         Down,
-        ArcLeft,
-        ArcRight,
-        ZoomIn,
-        ZoomOut
     }
 
     public sealed class Camera
     {
+        private bool _isDirty;
+
         public Matrix view { get; private set; }
         public Matrix projection { get; private set; }
 
@@ -45,13 +44,38 @@ namespace Microcosm
         }
 
         // Camera
-        public Vector3 Position { get; private set; }
-        public Vector3 Target { get; private set; }
+        private Vector3 _position;
+        public Vector3 Position
+        {
+            get { return _position; }
+            private set
+            {
+                if(_position != value)
+                {
+                    _isDirty = true;
+                    _position = value;
+                }
+            }
+        }
+
+        private Vector3 _target;
+        public Vector3 Target
+        {
+            get { return _target; }
+            private set
+            {
+                if(_target != value)
+                {
+                    _isDirty = true;
+                    _target = value;
+                }
+            }
+        }
 
         // Fixed 
         private const float panSpeed  = .08f;
         private const float zoomSpeed = .6f;
-        private const float rotationSpeed = .01f;
+        private const float rotationSpeed = .04f;
 
         private const float minZoom = 1f;
         private const float maxZoom = 120f;
@@ -68,13 +92,17 @@ namespace Microcosm
         public void Initialize()
         {
             // Set mouse position and do initial get state
-            //Mouse.SetPosition(GameEngine.Window.ClientBounds.Width / 2, GameEngine.Window.ClientBounds.Height / 2);        
+            Mouse.SetPosition(GameEngine.GameWindow.ClientBounds.Width / 2, GameEngine.GameWindow.ClientBounds.Height / 2);        
         }
 
         public void Update(GameTime gameTime)
         {
             // Update View
-            view = Matrix.CreateLookAt(Position, Target, Vector3.Up);
+            if (_isDirty)
+            {
+                view = Matrix.CreateLookAt(Position, Target, Vector3.Up);
+                _isDirty = false;
+            }
         }
         
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -117,19 +145,47 @@ namespace Microcosm
                     Position -= fwd * panSpeed;
                     Target -= fwd * panSpeed;
                     break;
-                case Movement.ArcLeft:
+                
+                
+            }
+        }
+        public void Arc(Movement cameraMovement)
+        {
+            switch(cameraMovement)
+            {
+                case Movement.Left:
                     Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), rotationSpeed)) + Target;
                     break;
-                case Movement.ArcRight:
+                case Movement.Right:
                     Position = Vector3.Transform(Position - Target, Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), -rotationSpeed)) + Target;
                     break;
-                case Movement.ZoomIn:
+            }
+        }
+        public void Zoom(Movement cameraMovement)
+        {
+            switch(cameraMovement)
+            {
+                case Movement.Down:
                     Position += camWorld.Backward * zoomSpeed;
                     break;
-                case Movement.ZoomOut:
+                case Movement.Up:
                     Position += camWorld.Forward * zoomSpeed;
                     break;
             }
+        }
+        public void Drag(Point CurrentPosition, Point PreviousPosition)
+        {
+            Position -= WorldPosition(CurrentPosition) - WorldPosition(PreviousPosition);
+            Target -= WorldPosition(CurrentPosition) - WorldPosition(PreviousPosition);
+        }
+
+        public Vector3 WorldPosition(Point MouseLocation)
+        {
+            Vector3 nearPoint = GameEngine.GraphicsDeviceManager.GraphicsDevice.Viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 0.0f), projection, view, Matrix.Identity);
+            Vector3 farPoint = GameEngine.GraphicsDeviceManager.GraphicsDevice.Viewport.Unproject(new Vector3(MouseLocation.X, MouseLocation.Y, 1.0f), projection, view, Matrix.Identity);
+            Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
+
+            return (nearPoint - direction * (nearPoint.Y / direction.Y));
         }
     }
 }

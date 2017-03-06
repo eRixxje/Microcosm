@@ -13,7 +13,7 @@ namespace Gametek.Monogame.Input
         private static Keys _previousKey;
         private static KeyboardState _previousState;
 
-        public static int InitialDelay = 0;
+        public static int InitialDelay = 800;
         public static int RepeatDelay = 50;
 
         public static event EventHandler<KeyboardEventArgs> KeyTyped;
@@ -43,7 +43,6 @@ namespace Gametek.Monogame.Input
                 }
             }
         }
-
         private static void RaiseReleasedEvents(KeyboardState currentState)
         {
             var releasedKeys = Enum.GetValues(typeof(Keys))
@@ -53,7 +52,6 @@ namespace Gametek.Monogame.Input
             foreach (var key in releasedKeys)
                 KeyReleased?.Invoke(null, new KeyboardEventArgs(key, currentState));
         }
-
         private static void RaiseRepeatEvents(GameTime gameTime, KeyboardState currentState)
         {
             var elapsedTime = (gameTime.TotalGameTime - _lastPressTime).TotalMilliseconds;
@@ -72,7 +70,6 @@ namespace Gametek.Monogame.Input
                 _isInitial = false;
             }
         }
-
 
         public static void Update(GameTime gameTime)
         {

@@ -22,8 +22,6 @@ namespace Microcosm.Screens
         private VertexBuffer mapVertexBuffer;
         private IndexBuffer mapIndexBuffer;
 
-        private string mouseposition;
-
         private cube Cube;
 
         public MapScreen()
@@ -31,7 +29,6 @@ namespace Microcosm.Screens
             IsVisible = true;
             camera = new Camera(new Vector3(20, 22, 20), new Vector3(3, 0, 3));
 
-            KeyListener.KeyPressed += KeyListener_KeyPressed;
             KeyListener.KeyTyped += KeyListener_KeyTyped;
 
             MouseListener.MouseDrag += MouseListener_MouseDrag;
@@ -40,24 +37,23 @@ namespace Microcosm.Screens
 
         private void MouseListener_MouseWheelMoved(object sender, MouseEventArgs e)
         {
-            //if (InputManager.MouseZoom == ScrollDirection.ZoomIn && Position.Y < maxZoom)
-            //    Move(Movement.ZoomIn);
-            //if (InputManager.MouseZoom == ScrollDirection.ZoomOut && Position.Y > minZoom)
-            //    Move(Movement.ZoomOut);
-
-            if (e.ScrollWheelDelta != 0)
-            {
-                camera.Move(Movement.ZoomIn);
-            }
+            if (e.ScrollWheelDelta > 0)
+                camera.Zoom(Movement.Up);
+            else
+                camera.Zoom(Movement.Down);
         }
-
         private void MouseListener_MouseDrag(object sender, MouseEventArgs e)
         {
-            // Drag
-            if(e.Button == MouseButton.Right && e.DistanceMoved != Vector2.Zero)
+            if(e.Button == MouseButton.Right)
+                camera.Drag(e.CurrentState.Position, e.PreviousState.Position);
+
+            if(e.Button == MouseButton.Middle)
             {
-                //camera.Position -= InputManager.GetMouseDragDelta(projection, view);
-                //camera.Target -= InputManager.GetMouseDragDelta(projection, view);
+                if (e.DistanceMoved.X > 0) // || e.DistanceMoved.Y > 0)
+                    camera.Arc(Movement.Right);
+                
+                if(e.DistanceMoved.X < 0) // || e.DistanceMoved.Y < 0)
+                    camera.Arc(Movement.Left);
             }
         }
 
@@ -70,37 +66,6 @@ namespace Microcosm.Screens
                     break;
                 case Microsoft.Xna.Framework.Input.Keys.F2:
                     drawAxes = !drawAxes;
-                    break;
-            }
-        }
-
-        private void KeyListener_KeyPressed(object sender, KeyboardEventArgs e)
-        {
-            // Keyboard input
-            //if (InputManager.IsKeyDown(Keys.W) && InputManager.IsKeyDown(Keys.LeftShift))
-            //    Move(Movement.Up);
-            //if (InputManager.IsKeyDown(Keys.S) && InputManager.IsKeyDown(Keys.LeftShift))
-            //    Move(Movement.Down);
-
-            switch (e.Key)
-            {
-                case Microsoft.Xna.Framework.Input.Keys.W:
-                    camera.Move(Movement.Forward);
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.S:
-                    camera.Move(Movement.Back);
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.A:
-                    camera.Move(Movement.Left);
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.D:
-                    camera.Move(Movement.Right);
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.Z:
-                    camera.Move(Movement.ArcLeft);
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.X:
-                    camera.Move(Movement.ArcRight);
                     break;
             }
         }
@@ -137,9 +102,9 @@ namespace Microcosm.Screens
         }
         public override void UnloadContent()
         {
-            KeyListener.KeyPressed -= KeyListener_KeyPressed;
-
-            //ScreenManager.game.Content.Unload();
+            KeyListener.KeyTyped -= KeyListener_KeyTyped;
+            MouseListener.MouseDrag -= MouseListener_MouseDrag;
+            MouseListener.MouseWheelMoved -= MouseListener_MouseWheelMoved;
         }
         public override void Update(GameTime gameTime)
         {
@@ -183,8 +148,6 @@ namespace Microcosm.Screens
 
             Cube.Draw(camera, new Vector3(30, 0, 30));
 
-           
-
             camera.Draw(gameTime, _spriteBatch);
 
             _spriteBatch.DrawString(FontManager.ControlFont, "FPS: " + (1000 / gameTime.ElapsedGameTime.Milliseconds), 
@@ -193,7 +156,7 @@ namespace Microcosm.Screens
                 new Vector2(10, 40), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             _spriteBatch.DrawString(FontManager.ControlFont, "Target: " + camera.cameraTargetString,
                 new Vector2(10, 70), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
-            _spriteBatch.DrawString(FontManager.ControlFont, "Mouse: " + mouseposition,
+            _spriteBatch.DrawString(FontManager.ControlFont, "Mouse: " + MouseListener.Position,
                 new Vector2(10, 100), Color.LightGreen, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0.5f);
             _spriteBatch.End();
         }
