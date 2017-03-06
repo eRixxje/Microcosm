@@ -28,6 +28,7 @@ namespace Microcosm
 
             // Add Screens
             ScreenManager.Register(new MapScreen());
+            //ScreenManager.Register(new CubeScreen());
             ScreenManager.Initialize();
 
             base.Initialize();
